@@ -1,0 +1,647 @@
+{
+  "level": 3,
+  "meta": {},
+  "player": {
+    "position": {
+      "x": 0.5,
+      "y": 0.2
+    }
+  },
+  "entities": [
+    "Platform",
+    "Mirror",
+    "Exit",
+    "LightSwitch",
+    "Prism"
+  ],
+  "objects": [
+    {
+      "id": 1,
+      "type": "Exit",
+      "position": {
+        "x": 4.8,
+        "y": 0.1
+      },
+      "dimension": {
+        "w": 0.1,
+        "h": 0.1
+      }
+    },
+    {
+      "id": 2,
+      "type": "Platform",
+      "position": {
+        "x": 0.0,
+        "y": -0.05
+      },
+      "dimension": {
+        "w": 5.05,
+        "h": 0.05
+      },
+      "teleportable": true
+    },
+    {
+      "id": 3,
+      "type": "Platform",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "dimension": {
+        "w": 0.05,
+        "h": 4
+      }
+    },
+    {
+      "id": 4,
+      "type": "Platform",
+      "position": {
+        "x": 5.0,
+        "y": 0
+      },
+      "dimension": {
+        "w": 0.05,
+        "h": 4
+      },
+      "teleportable": true
+    },
+    {
+      "id": 5,
+      "type": "Platform",
+      "position": {
+        "x": 0,
+        "y": 3.95
+      },
+      "dimension": {
+        "w": 5.05,
+        "h": 0.05
+      },
+      "teleportable": true
+    },
+    {
+      "id": 6,
+      "type": "Platform",
+      "position": {
+        "x": 0.0,
+        "y": 0.7
+      },
+      "dimension": {
+        "w": 4.0,
+        "h": 0.05
+      },
+      "teleportable": false
+    },
+    {
+      "id": 7,
+      "type": "Platform",
+      "position": {
+        "x": 4.4,
+        "y": 0.5
+      },
+      "dimension": {
+        "w": 0.6,
+        "h": 0.1
+      }
+    },
+    {
+      "id": 8,
+      "type": "Platform",
+      "position": {
+        "x": 4.4,
+        "y": 0.3
+      },
+      "dimension": {
+        "w": 0.09,
+        "h": 3.2
+      }
+    },
+    {
+      "id": 9,
+      "type": "Platform",
+      "position": {
+        "x": 4.4,
+        "y": 0.0
+      },
+      "dimension": {
+        "w": 0.1,
+        "h": 0.3
+      }
+    },
+    {
+      "id": 10,
+      "type": "Platform",
+      "position": {
+        "x": 1.0,
+        "y": 0.0
+      },
+      "dimension": {
+        "w": 0.4,
+        "h": 0.4
+      }
+    },
+    {
+      "id": 11,
+      "type": "Platform",
+      "position": {
+        "x": 2.6,
+        "y": 1.8
+      },
+      "dimension": {
+        "w": 1.9,
+        "h": 0.1
+      }
+    },
+    {
+      "id": 12,
+      "type": "LightSwitch",
+      "position": {
+        "x": 4.5,
+        "y": 1.0
+      },
+      "dimension": {
+        "w": 0.2,
+        "h": 0.1
+      },
+      "targets": [9]
+    },
+    {
+      "id": 13,
+      "type": "Platform",
+      "position": {
+        "x": 4.5,
+        "y": 1.1
+      },
+      "dimension": {
+        "w": 0.2,
+        "h": 0.1
+      }
+    },
+    {
+      "id": 14,
+      "type": "Platform",
+      "position": {
+        "x": 4.8,
+        "y": 1.8
+      },
+      "dimension": {
+        "w": 0.2,
+        "h": 0.1
+      },
+      "teleportable": true
+    },
+    {
+      "id": 15,
+      "type": "Platform",
+      "position": {
+        "x": 1.0,
+        "y": 0.8
+      },
+      "dimension": {
+        "w": 0.1,
+        "h": 2.37
+      }
+    },
+    {
+      "id": 16,
+      "type": "Platform",
+      "position": {
+        "x": 1.0,
+        "y": 3.23
+      },
+      "dimension": {
+        "w": 0.05,
+        "h": 0.77
+      }
+    },
+    {
+      "id": 45,
+      "type": "Platform",
+      "position": {
+        "x": 1.0,
+        "y": 3.0
+      },
+      "dimension": {
+        "w": 0.5,
+        "h": 0.1
+      }
+    },
+    {
+      "id": 17,
+      "type": "Mirror",
+      "position": {
+        "x": 4.39,
+        "y": 0.5
+      },
+      "dimension": {
+        "w": 0.01,
+        "h": 0.5
+      },
+      "movable": false
+    },
+    {
+      "id": 18,
+      "type": "Mirror",
+      "position": {
+        "x": 3.6,
+        "y": 1.79
+      },
+      "dimension": {
+        "w": 0.5,
+        "h": 0.01
+      },
+      "movable": false
+    },
+    {
+      "id": 19,
+      "type": "Platform",
+      "position": {
+        "x": 3.8,
+        "y": 0.3
+      },
+      "dimension": {
+        "w": 0.2,
+        "h": 1.0
+      }
+    },
+    {
+      "id": 20,
+      "type": "Platform",
+      "position": {
+        "x": 3.4,
+        "y": 1.3
+      },
+      "dimension": {
+        "w": 0.1,
+        "h": 0.5
+      },
+      "teleportable": true
+    },
+    {
+      "id": 21,
+      "type": "Platform",
+      "position": {
+        "x": 2.5,
+        "y": 0.8
+      },
+      "dimension": {
+        "w": 0.6,
+        "h": 0.3
+      }
+    },
+    {
+      "id": 22,
+      "type": "Platform",
+      "position": {
+        "x": 1.9,
+        "y": 0.8
+      },
+      "dimension": {
+        "w": 0.6,
+        "h": 0.6
+      }
+    },
+    {
+      "id": 23,
+      "type": "Platform",
+      "position": {
+        "x": 1.0,
+        "y": 0.8
+      },
+      "dimension": {
+        "w": 0.9,
+        "h": 0.9
+      }
+    },
+    {
+      "id": 24,
+      "type": "Platform",
+      "position": {
+        "x": 2.6,
+        "y": 2.6
+      },
+      "dimension": {
+        "w": 1.0,
+        "h": 1.4
+      },
+      "teleportable": true
+    },
+    {
+      "id": 25,
+      "type": "Platform",
+      "position": {
+        "x": 4.5,
+        "y": 2.5
+      },
+      "dimension": {
+        "w": 0.2,
+        "h": 0.1
+      },
+      "teleportable": true
+    },
+    {
+      "id": 26,
+      "type": "Platform",
+      "position": {
+        "x": 4.8,
+        "y": 3.2
+      },
+      "dimension": {
+        "w": 0.2,
+        "h": 0.1
+      },
+      "teleportable": true
+    },
+    {
+      "id": 27,
+      "type": "Platform",
+      "position": {
+        "x": 2.0,
+        "y": 0.3
+      },
+      "dimension": {
+        "w": 1.9,
+        "h": 0.1
+      }
+    },
+    {
+      "id": 29,
+      "type": "Platform",
+      "position": {
+        "x": 1.1,
+        "y": 1.7
+      },
+      "dimension": {
+        "w": 0.3,
+        "h": 0.3
+      }
+    },
+    {
+      "id": 30,
+      "type": "Mirror",
+      "position": {
+        "x": 2.59,
+        "y": 2.6
+      },
+      "dimension": {
+        "w": 0.01,
+        "h": 0.5
+      },
+      "movable": false
+    },
+    {
+      "id": 31,
+      "type": "Platform",
+      "position": {
+        "x": 3.0,
+        "y": 2.2
+      },
+      "dimension": {
+        "w": 0.1,
+        "h": 0.4
+      },
+      "teleportable": true
+    },
+    {
+      "id": 32,
+      "type": "Platform",
+      "position": {
+        "x": 4.0,
+        "y": 1.8
+      },
+      "dimension": {
+        "w": 0.49,
+        "h": 0.5
+      }
+    },
+    {
+      "id": 33,
+      "type": "Mirror",
+      "position": {
+        "x": 0.2,
+        "y": 3.02
+      },
+      "dimension": {
+        "w": 0.05,
+        "h": 0.36
+      },
+      "movable": true
+    },
+    {
+      "id": 34,
+      "type": "LightSwitch",
+      "position": {
+        "x": 0.9,
+        "y": 2.7
+      },
+      "dimension": {
+        "w": 0.1,
+        "h": 0.3
+      },
+      "targets": [38]
+    },
+    {
+      "id": 35,
+      "type": "Platform",
+      "position": {
+        "x": 0.0,
+        "y": 0.8
+      },
+      "dimension": {
+        "w": 1.0,
+        "h": 1.9
+      }
+    },
+    {
+      "id": 36,
+      "type": "LightSwitch",
+      "position": {
+        "x": 0.9,
+        "y": 3.4
+      },
+      "dimension": {
+        "w": 0.1,
+        "h": 0.3
+      },
+      "targets": [39]
+    },
+    {
+      "id": 37,
+      "type": "Platform",
+      "position": {
+        "x": 0.0,
+        "y": 3.7
+      },
+      "dimension": {
+        "w": 1.0,
+        "h": 0.3
+      }
+    },
+    {
+      "id": 38,
+      "type": "Platform",
+      "position": {
+        "x": 3.0,
+        "y": 1.8
+      },
+      "dimension": {
+        "w": 0.1,
+        "h": 0.4
+      },
+      "teleportable": true
+    },
+    {
+      "id": 39,
+      "type": "Platform",
+      "position": {
+        "x": 3.3,
+        "y": 1.8
+      },
+      "dimension": {
+        "w": 0.1,
+        "h": 0.4
+      }
+    },
+    {
+      "id": 40,
+      "type": "Platform",
+      "position": {
+        "x": 3.3,
+        "y": 2.2
+      },
+      "dimension": {
+        "w": 0.1,
+        "h": 0.4
+      }
+    },
+    {
+      "id": 41,
+      "type": "Platform",
+      "position": {
+        "x": 3.3,
+        "y": 2.2
+      },
+      "dimension": {
+        "w": 0.1,
+        "h": 0.4
+      }
+    },
+    {
+      "id": 42,
+      "type": "Platform",
+      "position": {
+        "x": 4.0,
+        "y": 3.0
+      },
+      "dimension": {
+        "w": 0.4,
+        "h": 0.1
+      }
+    },
+    {
+      "id": 43,
+      "type": "Platform",
+      "position": {
+        "x": 3.6,
+        "y": 3.4
+      },
+      "dimension": {
+        "w": 0.4,
+        "h": 0.1
+      }
+    },
+    {
+      "id": 44,
+      "type": "Platform",
+      "position": {
+        "x": 3.6,
+        "y": 2.6
+      },
+      "dimension": {
+        "w": 0.3,
+        "h": 0.1
+      }
+    },
+    {
+      "id": 46,
+      "type": "Platform",
+      "position": {
+        "x": 1.05,
+        "y": 3.23
+      },
+      "dimension": {
+        "w": 0.05,
+        "h": 0.77
+      },
+      "teleportable": true
+    },
+    {
+      "id": 47,
+      "type": "Platform",
+      "position": {
+        "x": 4.49,
+        "y": 0.5
+      },
+      "dimension": {
+        "w": 0.01,
+        "h": 3.0
+      },
+      "teleportable": true
+    },
+    {
+      "id": 48,
+      "type": "Arrow",
+      "position": {
+        "x": 4.1,
+        "y": 0.15
+      },
+      "direction": 0
+    },
+    {
+      "id": 49,
+      "type": "Arrow",
+      "position": {
+        "x": 1.25,
+        "y": 2.3
+      },
+      "direction": 3
+    },
+    {
+      "id": 50,
+      "type": "Platform",
+      "position": {
+        "x": 4.49,
+        "y": 0.3
+      },
+      "dimension": {
+        "w": 0.01,
+        "h": 0.3
+      }
+    },
+    {
+      "id": 51,
+      "type": "Platform",
+      "position": {
+        "x": 0.0,
+        "y": 0.75
+      },
+      "dimension": {
+        "w": 4.0,
+        "h": 0.05
+      },
+      "teleportable": true
+    },
+    {
+      "id": 52,
+      "type": "Platform",
+      "position": {
+        "x": 3.599,
+        "y": 2.6
+      },
+      "dimension": {
+        "w": 0.001,
+        "h": 1.4
+      },
+      "teleportable": true
+    }
+  ]
+}

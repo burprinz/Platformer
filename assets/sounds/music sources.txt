@@ -1,0 +1,5 @@
+Professor Layton - Puzzles reinvented 2 [Super Extended]
+"puzzle_music"
+
+Märchenmusik - Flight Of A Lifetime - Grimm inspired
+"music_endboss"
