@@ -18,7 +18,7 @@ class RenderSystem {
 		void deinit() noexcept;
 		void step(const float delta) noexcept;
 		void reset() noexcept;
-		void onResizeCallback(GLFWwindow* window, int width, int height) noexcept;
+
 
 
 	private:
@@ -26,6 +26,4 @@ class RenderSystem {
 		Window* m_window;
 		ParticleSystem* m_particles;
 		Draw* m_draw;
-
-		Framebuffer m_intermediate_framebuffer;
 };

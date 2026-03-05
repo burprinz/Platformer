@@ -6,9 +6,18 @@
 
 #include <iostream>
 
-Draw *Draw::init(Window* window) noexcept {
+#include "config.h"
+
+Draw *Draw::init(Window* window, Registry* registry) noexcept {
     Draw *self = new Draw;
     self->m_window = window;
+    self->m_registry = registry;
+
+    glm::uvec2 extent = self->m_window->windowExtent();
+    self->m_intermediate_framebuffer = Framebuffer::init({ static_cast<GLsizei>(extent.x), static_cast<GLsizei>(extent.y), 1, true });
+
+    self->m_registry->m_viewport.m_origin = glm::uvec2(0);
+    self->m_registry->m_viewport.m_size = self->m_window->windowExtent();
 
      // load resources for rendering
     self->m_player_mesh = Mesh::init(assets::Mesh::player).value();
@@ -127,9 +136,38 @@ void Draw::deinit() noexcept {
     m_platform_shader.deinit();
     m_circle_shader.deinit();
     m_text_shader.deinit();
+    m_intermediate_framebuffer.deinit();
+
 }
 
-void Draw::drawLine(glm::vec2 start, glm::vec2 end, glm::vec3 color, glm::mat4 view, glm::mat4 projection) noexcept {
+void Draw::start() noexcept {
+    const auto& cam = m_registry->m_camera;
+    glm::vec2 half = 0.5f * cam.viewSize;
+    view = getViewMatrix();
+    projection = glm::ortho(
+        cam.center.x - half.x, cam.center.x + half.x,
+        cam.center.y - half.y, cam.center.y + half.y,
+        -1.f, 1.f
+    );
+
+    glm::uvec2 extent = m_intermediate_framebuffer.extent();
+    glViewport(0, 0, extent.x, extent.y);
+    glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_PROGRAM_POINT_SIZE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_DEPTH_TEST);
+}
+
+void Draw::finish() noexcept {
+    Viewport viewport = m_registry->m_viewport;
+    glViewport(viewport.m_origin.x, viewport.m_origin.y,
+               viewport.m_size.x, viewport.m_size.y);
+}
+
+
+void Draw::drawLine(glm::vec2 start, glm::vec2 end, glm::vec3 color) noexcept {
     glBindVertexArray(m_line_vao);
     glm::vec2 points[2] = {start, end};
 
@@ -145,7 +183,7 @@ void Draw::drawLine(glm::vec2 start, glm::vec2 end, glm::vec3 color, glm::mat4 v
     glDrawArrays(GL_LINES, 0, 2);
 }
 
-void Draw::fillRect(glm::vec2 topleft, glm::vec2 topright,glm::vec2 bottomleft, glm::vec2 bottomright, glm::vec3 color, float opacity, glm::mat4 view, glm::mat4 projection) noexcept {
+void Draw::fillRect(glm::vec2 topleft, glm::vec2 topright,glm::vec2 bottomleft, glm::vec2 bottomright, glm::vec3 color, float opacity) noexcept {
     //draws a black quad
     glm::vec2 points[4] = { topleft, topright, bottomleft, bottomright };
 
@@ -162,7 +200,7 @@ void Draw::fillRect(glm::vec2 topleft, glm::vec2 topright,glm::vec2 bottomleft, 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void Draw::fillRectBySize(glm::vec2 center, glm::vec2 size, glm::vec3 color, float opacity, glm::mat4 view, glm::mat4 projection) noexcept {
+void Draw::fillRectBySize(glm::vec2 center, glm::vec2 size, glm::vec3 color, float opacity) noexcept {
     float w = size.x/2;
     float h = size.y/2;
 
@@ -171,17 +209,17 @@ void Draw::fillRectBySize(glm::vec2 center, glm::vec2 size, glm::vec3 color, flo
     glm::vec2 bl = center + glm::vec2{-w, -h};
     glm::vec2 br = center + glm::vec2{w, -h};
 
-    fillRect(tl, tr, bl, br, color, opacity, view, projection);
+    fillRect(tl, tr, bl, br, color, opacity);
 }
 
-void Draw::drawRect(glm::vec2 topleft, glm::vec2 topright,glm::vec2 bottomleft, glm::vec2 bottomright, glm::vec3 color, glm::mat4 view, glm::mat4 projection) noexcept {
-    drawLine(topleft, topright, color, view, projection);
-    drawLine(topleft, bottomleft, color, view, projection);
-    drawLine(bottomright, bottomleft, color, view, projection);
-    drawLine(bottomright, topright, color, view, projection);
+void Draw::drawRect(glm::vec2 topleft, glm::vec2 topright,glm::vec2 bottomleft, glm::vec2 bottomright, glm::vec3 color) noexcept {
+    drawLine(topleft, topright, color);
+    drawLine(topleft, bottomleft, color);
+    drawLine(bottomright, bottomleft, color);
+    drawLine(bottomright, topright, color);
 }
 
-void Draw::drawRectBySize(glm::vec2 center, glm::vec2 size, glm::vec3 color, glm::mat4 view, glm::mat4 projection) noexcept {
+void Draw::drawRectBySize(glm::vec2 center, glm::vec2 size, glm::vec3 color) noexcept {
     float w = size.x/2;
     float h = size.y/2;
 
@@ -190,10 +228,10 @@ void Draw::drawRectBySize(glm::vec2 center, glm::vec2 size, glm::vec3 color, glm
     glm::vec2 bl = center + glm::vec2{-w, -h};
     glm::vec2 br = center + glm::vec2{w, -h};
 
-    drawRect(tl, tr, bl, br, color, view, projection);
+    drawRect(tl, tr, bl, br, color);
 }
 
-void Draw::fillCircle(glm::vec2 position, float radius, glm::vec3 color, float opacity, glm::mat4 view, glm::mat4 projection) noexcept {
+void Draw::fillCircle(glm::vec2 position, float radius, glm::vec3 color, float opacity) noexcept {
     glm::vec2 tl = {-radius, radius};
     glm::vec2 tr = {radius, radius};
     glm::vec2 bl = {-radius, -radius};
@@ -218,7 +256,7 @@ void Draw::fillCircle(glm::vec2 position, float radius, glm::vec3 color, float o
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
-void Draw::drawPolygon(glm::vec2 position, glm::vec2 scale, PolygonShape polygon, glm::vec3 color, glm::mat4 projection) noexcept {
+void Draw::fillPolygon(glm::vec2 position, glm::vec2 scale, PolygonShape polygon, glm::vec3 color) noexcept {
     std::vector<glm::vec2> vertices = polygon.vertices;
     std::vector<int> indices = polygon.triangle_indices;
     if (vertices.size() < 3) {
@@ -245,8 +283,7 @@ void Draw::drawPolygon(glm::vec2 position, glm::vec2 scale, PolygonShape polygon
 
 
 
-void Draw::drawString(std::string text, glm::vec2 pos, float scale, glm::vec3 color, glm::mat4 view,
-                            glm::mat4 projection) noexcept {
+void Draw::drawString(std::string text, glm::vec2 pos, float scale, glm::vec3 color) noexcept {
 
     m_text_shader.use()
         .setMat4("view", view)
@@ -273,7 +310,7 @@ void Draw::drawString(std::string text, glm::vec2 pos, float scale, glm::vec3 co
     }
 }
 
-void Draw::drawRainbowString(std::string text, glm::vec2 pos, float scale, std::vector<glm::vec3> colors, std::vector<int> color_ids, glm::mat4 view, glm::mat4 projection) noexcept {
+void Draw::drawRainbowString(std::string text, glm::vec2 pos, float scale, std::vector<glm::vec3> colors, std::vector<int> color_ids) noexcept {
 
     m_text_shader.use()
     .setMat4("view", view)
@@ -331,7 +368,7 @@ float Draw::getStringWidth(std::string text, float scale) noexcept {
 }
 
 
-void Draw::drawArrow(glm::vec2 start_point, glm::vec2 end_point, glm::vec3 color, float line_width, glm::mat4 view, glm::mat4 projection) noexcept {
+void Draw::drawArrow(glm::vec2 start_point, glm::vec2 end_point, glm::vec3 color, float line_width) noexcept {
     glm::vec2 direction = glm::normalize(end_point - start_point);
     glm::vec2 perp = glm::vec2(-direction.y, direction.x);
 
@@ -344,21 +381,49 @@ void Draw::drawArrow(glm::vec2 start_point, glm::vec2 end_point, glm::vec3 color
         end_point - direction * 0.003f - perp * line_width,
         start_point + perp * line_width,
         start_point - perp * line_width,
-        color, 1.f, view, projection);
+        color, 1.f);
     fillRect(end_point + arrow_1_direction * 0.1f + arrow_1_perp * line_width,
         end_point - line_width * perp + arrow_1_perp * line_width,
         end_point + arrow_1_direction * 0.1f - arrow_1_perp * line_width,
         end_point - line_width * perp - arrow_1_perp * line_width,
-        color, 1.f, view, projection);
+        color, 1.f);
     fillRect(end_point + arrow_2_direction * 0.1f + arrow_2_perp * line_width,
         end_point + arrow_2_perp * line_width,
         end_point + arrow_2_direction * 0.1f - arrow_2_perp * line_width,
         end_point - arrow_2_perp * line_width,
-        color, 1.f, view, projection);
+        color, 1.f);
 }
 
 
 
 glm::mat4 Draw::getViewMatrix() noexcept {
     return glm::lookAt(glm::vec3(0, 0, 1), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+}
+
+static std::pair<glm::uvec2, glm::uvec2> computeViewportConfig(const glm::uvec2 resolution) noexcept {
+    float window_aspect_ratio = (float) resolution.x / resolution.y;
+    if (window_aspect_ratio > config::GAME_ASPECT_RATIO) {
+        glm::uvec2 viewport_size = {resolution.y * config::GAME_ASPECT_RATIO, resolution.y};
+        uint32_t offset = (resolution.x - viewport_size.x) / 2;
+        glm::uvec2 viewport_offset = {offset, 0};
+
+        return {viewport_offset, viewport_size};
+    }
+
+    glm::uvec2 viewport_size = {resolution.x, resolution.x / config::GAME_ASPECT_RATIO};
+    uint32_t offset = (resolution.y - viewport_size.y) / 2;
+    glm::uvec2 viewport_offset = {0, offset};
+
+    return {viewport_offset, viewport_size};
+}
+
+
+void Draw::onResizeCallback(GLFWwindow *, int width, int height) noexcept {
+    auto [origin, size] = computeViewportConfig({width, height});
+    m_registry->m_viewport.m_origin = origin;
+    m_registry->m_viewport.m_size = size;
+
+    // reinitialize off-screen framebuffer
+    m_intermediate_framebuffer.deinit();
+    m_intermediate_framebuffer = Framebuffer::init({(GLsizei) size.x, (GLsizei) size.y, 1, true});
 }

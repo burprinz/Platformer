@@ -58,7 +58,7 @@ std::optional<Application> Application::init(const CommandLineOptions& options) 
 	*self.m_audio_engine = AudioSystem::init();
 
 	self.m_registry = Registry::init();
-	self.m_draw = Draw::init(self.m_window);
+	self.m_draw = Draw::init(self.m_window, self.m_registry);
 
 	self.m_world = WorldSystem::init(self.m_window, self.m_registry, self.m_audio_engine);
 	self.m_physics = PhysicsSystem::init(self.m_window, self.m_registry, self.m_audio_engine);
@@ -126,7 +126,11 @@ void Application::run() noexcept {
 		m_particles->step(delta_time);
 
 		m_camera.step(delta_time);
+
+		m_draw->start();
 		m_render.step(delta_time);
+		m_draw->finish();
+
 		m_window->swapBuffers();
 	}
 }
@@ -168,5 +172,5 @@ void Application::onMouseCallback(GLFWwindow *window, int button, int action, in
 }
 
 void Application::onResizeCallback(GLFWwindow* window, int width, int height) noexcept {
-	m_render.onResizeCallback(window, width, height);
+	m_draw->onResizeCallback(window, width, height);
 }
