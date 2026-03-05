@@ -327,8 +327,11 @@ void RenderSystem::step(const float /*delta*/) noexcept {
 
 	// Draw Player
 	glm::vec2 player_pos = m_registry->ecs.get<Position>(m_registry->player()).pos;        // Position of the texture
-	float player_radius = m_registry->ecs.get<Radius>(m_registry->player()).r;        // Position of the texture
-	drawCircleParticle(player_pos, player_radius, glm::vec3(0, 1, 0), 1, view, projection);
+	glm::vec2 player_size = m_registry->ecs.get<Dimension>(m_registry->player()).dim;
+	//float player_radius = m_registry->ecs.get<Radius>(m_registry->player()).r;        // Position of the texture
+	//drawQuadBySize(player_pos, player_size, glm::vec3(0,1,0), 1, view, projection);
+	drawQuad(player_pos+glm::vec2(0,player_size.y), player_pos+player_size,player_pos, player_pos+glm::vec2(player_size.x,0),glm::vec3(0,1,0), 1, view, projection);
+	//drawCircleParticle(player_pos, player_radius, glm::vec3(0, 1, 0), 1, view, projection);
 
 
     // Draw Plattform

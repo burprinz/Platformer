@@ -16,7 +16,7 @@ struct LightBeamCollision
 
 class PhysicsSystem {
 	public:
-		static PhysicsSystem init(Window* window, Registry* registry, AppRegistry* app, AudioSystem* audio_engine, ShapeProcessingSystem* shape_processing) noexcept;
+		static PhysicsSystem init(Window* window, Registry* registry, AudioSystem* audio_engine, ShapeProcessingSystem* shape_processing) noexcept;
 		void deinit() noexcept;
 
 		void step(const float delta) noexcept;
@@ -35,11 +35,12 @@ class PhysicsSystem {
 			return direction / scale;
 		}
 
+		glm::vec2 calculatePlayerVelocity(float delta) noexcept;
+		void handleCollision(float delta, entt::entity entity_id, glm::vec2 vel) noexcept;
 
 	private:
         Window* m_window;
 		Registry* m_registry;
-		AppRegistry* m_app;
 		AudioSystem* m_audio_engine;
 		ShapeProcessingSystem* m_shape_processing_system;
 };

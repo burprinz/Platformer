@@ -8,11 +8,10 @@
 #include "world.h"
 
 
-PhysicsSystem PhysicsSystem::init(Window* window, Registry* registry, AppRegistry* app, AudioSystem* audio_engine, ShapeProcessingSystem* shape_processing) noexcept {
+PhysicsSystem PhysicsSystem::init(Window* window, Registry* registry, AudioSystem* audio_engine, ShapeProcessingSystem* shape_processing) noexcept {
 	PhysicsSystem self;
     self.m_window = window;
 	self.m_registry = registry;
-	self.m_app = app;
 	self.m_audio_engine = audio_engine;
 	self.m_shape_processing_system = shape_processing;
 	return self;
@@ -22,7 +21,9 @@ void PhysicsSystem::deinit() noexcept {}
 
 void PhysicsSystem::step(const float delta) noexcept {
 
-	handlePlayerMovement(delta);
+
+	glm::vec2 pl_vel = calculatePlayerVelocity(delta);
+	handleCollision(delta, m_registry->player(), pl_vel);
 
 	// Update position
 
@@ -74,6 +75,7 @@ bool PhysicsSystem::checkPlayerPolygonCollision(
 	glm::vec2 &next_pos, glm::vec2 &vel, bool &on_ground,
 	float radius, glm::vec2 rect_position, glm::vec2 rect_size, std::vector<glm::vec2> world_vertices) noexcept {
 	(void) e;
+	(void) delta;
 	if (m_shape_processing_system->circle_rectangle_collision(next_pos, radius, rect_position, rect_size)) {
 		// next player position inside bounding box -> pruefen ob polygon-collision
 
@@ -92,6 +94,7 @@ bool PhysicsSystem::checkPlayerPolygonCollision(
 			}
 		}
 		if (closest_dist < radius) {
+			/*
 			if (m_app->debug_mode) {
 				std::cout<<"POLYGON-COLLISION: "//<<e
 				<<" | player_pos:"<<next_pos.x<<" "<<next_pos.y
@@ -100,6 +103,7 @@ bool PhysicsSystem::checkPlayerPolygonCollision(
 				<<" | dist:"<<closest_dist
 				<<"| delta: "<<delta<<std::endl;
 			}
+			*/
 			// Polygon Collision
 			glm::vec2 dir = glm::normalize(next_pos - closest_point);
 			float depth = radius - closest_dist;
@@ -120,21 +124,14 @@ bool PhysicsSystem::checkPlayerPolygonCollision(
 	return false;
 }
 
-/**
- * handlePlayer handles everything related to the player (collision, movement)
- * @param delta time passed since past frame
- * @param m_registry THE REGISTRY
- * @param m_window The Window
- */
-void PhysicsSystem::handlePlayerMovement(const float delta) noexcept {
+glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
+
 	entt::entity pl = m_registry->player();
 
-	float ground = 0.f;
-
 	float speed = 0.f;
-	if (m_app->keys["shift"]) {
+	if (m_registry->keys["shift"]) {
 		speed = m_registry->ecs.get<Player>(pl).sprint_velocity;
-	} else if (m_app->keys["strg"]) {
+	} else if (m_registry->keys["strg"]) {
 		speed = m_registry->ecs.get<Player>(pl).sneak_velocity;
 	} else {
 		speed = m_registry->ecs.get<Player>(pl).velocity;
@@ -142,66 +139,100 @@ void PhysicsSystem::handlePlayerMovement(const float delta) noexcept {
 
 	// Update player velocity
 	glm::vec2 vel = m_registry->ecs.get<Velocity>(pl).vel;
-	glm::vec2 pos = m_registry->ecs.get<Position>(pl).pos;
-	float radius = m_registry->ecs.get<struct Radius>(pl).r;
 
 	// Key input (A,D)
-	if (m_app->keys["d"]) {
+	if (m_registry->keys["d"]) {
 		vel.x = speed;
-	} else if (m_app->keys["a"]) {
+	} else if (m_registry->keys["a"]) {
 		vel.x = -speed;
 	} else {
 		vel.x = 0;
 	}
 
-	// Gravity
-	vel.y -= 9.81 * delta;
+	MobState player_state = m_registry->ecs.get<MobState>(m_registry->player());
+	// Key input (SPACE & W)
+	if (player_state.on_ground && (m_registry->keys["w"] || m_registry->keys["space"])) {
+		vel.y = 1.8f;
+	} else {
+		// Gravity
+		vel.y -= 9.81 * delta;
+		if (vel.y < -3.f) vel.y = -3.f;
+	}
 
-	if (vel.y < -3.f) vel.y = -3.f;
+	return vel;
+}
+
+void PhysicsSystem::handleCollision(float delta, entt::entity entity_id, glm::vec2 vel) noexcept {
+
+	glm::vec2 pos = m_registry->ecs.get<Position>(entity_id).pos;
+	glm::vec2 size = m_registry->ecs.get<Dimension>(entity_id).dim;
 
 	bool on_ground = false;
-	glm::vec2 next_pos = pos + vel * delta;
+	bool on_ceiling = false;
+	bool on_left = false;
+	bool on_right = false;
 
-	for (entt::entity e : m_registry->ecs.view<PolygonShape>()) {
-		PolygonShape* poly = &m_registry->ecs.get<PolygonShape>(e);
-		glm::vec2 polygon_pos = m_registry->ecs.get<Position>(e).pos;
-		glm::vec2 polygon_size = m_registry->ecs.get<Dimension>(e).dim;
+	(void) (on_ground && on_left && on_right && on_ceiling);
 
-		std::vector<glm::vec2> world_vertices;
-		for (glm::vec2 vertex : poly->vertices) {
-			world_vertices.push_back(transformVertexWorld(vertex, polygon_pos, polygon_size, 0.0f));
+	glm::vec2 next_pos = pos + vel*delta;
+
+	for (entt::entity platform_id : m_registry->ecs.view<Platform>()) {
+		glm::vec2 platform_pos = m_registry->ecs.get<Position>(platform_id).pos;
+		glm::vec2 platform_size = m_registry->ecs.get<Dimension>(platform_id).dim;
+
+		if (next_pos.x <= platform_pos.x + platform_size.x &&
+			next_pos.x + size.x >= platform_pos.x &&
+			next_pos.y <= platform_pos.y + platform_size.y &&
+			next_pos.y + size.y >= platform_pos.y) {
+
+			float top_dist = pos.y - (platform_pos.y + platform_size.y);
+			float bot_dist = platform_pos.y - (pos.y + size.y);
+			float left_dist = platform_pos.x - (pos.x + size.x);
+			float right_dist = pos.x - (platform_pos.x + platform_size.x);
+			float max_dist = top_dist;
+			if (bot_dist > max_dist) max_dist = bot_dist;
+			if (left_dist > max_dist) max_dist = left_dist;
+			if (right_dist > max_dist) max_dist = right_dist;
+
+			if (max_dist == top_dist && vel.y < 0) {
+				next_pos.y = platform_pos.y + platform_size.y;
+				vel.y = 0;
+				on_ground = true;
+			} else if (max_dist == bot_dist && vel.y > 0) {
+				next_pos.y = platform_pos.y - size.y;
+				vel.y = 0;
+				on_ceiling = true;
+			}
+
+			if (max_dist == left_dist && vel.x > 0) {
+				next_pos.x = platform_pos.x - size.x;
+				vel.x = 0;
+				on_right = true;
+			} else if (max_dist == right_dist && vel.x < 0) {
+				next_pos.x = platform_pos.x + platform_size.x;
+				vel.x = 0;
+				on_left = true;
+			}
 		}
-		poly->bounding_box = m_shape_processing_system->calculateBoundingBox(world_vertices);
-
-		glm::vec2 rect_position = poly->bounding_box.min;
-		glm::vec2 rect_size = poly->bounding_box.max - poly->bounding_box.min;
-
-		checkPlayerPolygonCollision(delta, e, next_pos, vel, on_ground, radius, rect_position, rect_size, world_vertices);
-
 	}
 
-	pos = next_pos;
-
-	if (!on_ground) {
-		float cur_y = pos.y - radius;
-		float next_y = cur_y + vel.y * delta;
-		if (next_y <= ground) {
-			// Below Ground
-			vel.y = 0;
-			pos.y = ground+radius;
-			on_ground = true;
-		}
-	} else if (vel.y < 0) {
+	if (next_pos.y < 0) {
+		next_pos.y = 0;
 		vel.y = 0;
+		on_ground = true;
 	}
 
-	// Key input (SPACE & W)
-	if (on_ground && ((!m_app->keyboardControlMode() && m_app->jump_button > 0 && m_app->keys["space"]) || (m_app->jump_button < 2 && m_app->keys["w"]))) {
-		vel.y = 1.8f;
-	}
+	MobState state;
+	state.on_ground = on_ground;
+	state.on_ceiling = on_ceiling;
+	state.on_left_wall = on_left;
+	state.on_right_wall = on_right;
+	state.in_air = !(on_ground || on_ceiling || on_left || on_right);
 
-	m_registry->ecs.replace<Position>(pl, pos);
-	m_registry->ecs.replace<Velocity>(pl, vel);
+	m_registry->ecs.replace<Position>(entity_id, next_pos);
+	m_registry->ecs.replace<Velocity>(entity_id, vel);
+	m_registry->ecs.replace<MobState>(entity_id, state);
 }
+
 
 void PhysicsSystem::reset() noexcept {}

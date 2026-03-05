@@ -44,12 +44,25 @@ struct Scale {
 
 
 /**
+* Characters
+*/
+struct MobState {
+    bool on_ground = false;
+    bool on_ceiling = false;
+    bool on_left_wall = false;
+    bool on_right_wall = false;
+    bool in_air = false;
+};
+
+/**
  * Objects
  */
 
 struct Platform {
 
 };
+
+
 
 
 
@@ -98,7 +111,7 @@ class Registry {
 public:
     static Registry *init() noexcept;
 
-    std::map<std::string, bool> m_keys;
+    void on_key_callback(int key, int action) noexcept;
 
     CameraState m_camera;
 
@@ -110,6 +123,9 @@ public:
     }
 
     entt::registry ecs;
+
+    std::map<std::string, bool> keys;
+
 
 private:
 

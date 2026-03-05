@@ -67,7 +67,7 @@ std::optional<Application> Application::init(const CommandLineOptions& options) 
 
 
 	self.m_world = WorldSystem::init(self.m_window, self.m_registry, self.m_app, self.m_audio_engine);
-	self.m_physics = PhysicsSystem::init(self.m_window, self.m_registry, self.m_app, self.m_audio_engine, self.m_shape_processing_system);
+	self.m_physics = PhysicsSystem::init(self.m_window, self.m_registry, self.m_audio_engine, self.m_shape_processing_system);
 	self.m_particles = ParticleSystem::init(self.m_window, self.m_registry);
 	self.m_render = RenderSystem::init(self.m_window, self.m_registry, self.m_app, self.m_particles);
 	self.m_camera = CameraSystem::init(self.m_registry);
@@ -150,11 +150,8 @@ void Application::reset() noexcept {
 	m_registry->ecs.emplace<Velocity>(player_id, glm::vec2(0.f, 0.f));
 	m_registry->ecs.emplace<Scale>(player_id, glm::vec2(-0.1f, 0.1f));
 	m_registry->ecs.emplace<Radius>(player_id, 0.1f);
-
-	entt::entity platform = m_registry->ecs.create();
-	m_registry->ecs.emplace<Platform>(platform);
-	m_registry->ecs.emplace<Position>(platform, glm::vec2(0.1f, 0.1f));
-	m_registry->ecs.emplace<Dimension>(platform, glm::vec2(0.5f, 0.5f));
+	m_registry->ecs.emplace<Dimension>(player_id, glm::vec2(0.1, 0.3));
+	m_registry->ecs.emplace<MobState>(player_id);
 
 	// reset systems
 	m_world.reset();
@@ -166,7 +163,7 @@ void Application::reset() noexcept {
 
 void Application::onKeyCallback(GLFWwindow* /*window*/, int key, int /*scancode*/, int action, int /*mods*/) noexcept {
 	// preserve “world-first” behavior: Input state is updated before UI/tut see it
-	(void) (key + action);
+	m_registry->on_key_callback(key, action);
 }
 
 void Application::onMouseCallback(GLFWwindow *window, int button, int action, int mods) noexcept {
