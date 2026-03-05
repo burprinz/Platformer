@@ -3,6 +3,11 @@
 #include <common.h>
 #include <entt/entt.hpp>
 
+struct Viewport{
+    glm::uvec2 m_origin;
+    glm::uvec2 m_size;
+};
+
 struct Player {
     float velocity = .5f;
     float sprint_velocity = 1.f;
@@ -111,9 +116,13 @@ class Registry {
 public:
     static Registry *init() noexcept;
 
+    Viewport m_viewport;
+    CameraState m_camera;
+
+    bool debug_mode = false;
+
     void on_key_callback(int key, int action) noexcept;
 
-    CameraState m_camera;
 
     inline entt::entity player() noexcept { return m_player; }
 

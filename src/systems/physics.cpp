@@ -8,12 +8,11 @@
 #include "world.h"
 
 
-PhysicsSystem PhysicsSystem::init(Window* window, Registry* registry, AudioSystem* audio_engine, ShapeProcessingSystem* shape_processing) noexcept {
+PhysicsSystem PhysicsSystem::init(Window* window, Registry* registry, AudioSystem* audio_engine) noexcept {
 	PhysicsSystem self;
     self.m_window = window;
 	self.m_registry = registry;
 	self.m_audio_engine = audio_engine;
-	self.m_shape_processing_system = shape_processing;
 	return self;
 }
 
@@ -63,66 +62,6 @@ glm::vec2 transformVertexWorld(
 	return center + r;
 }
 
-struct PlayerCollisionVars {
-	glm::vec2 pos;
-	glm::vec2 vel;
-	bool on_ground;
-};
-
-
-bool PhysicsSystem::checkPlayerPolygonCollision(
-	float delta, entt::entity e,
-	glm::vec2 &next_pos, glm::vec2 &vel, bool &on_ground,
-	float radius, glm::vec2 rect_position, glm::vec2 rect_size, std::vector<glm::vec2> world_vertices) noexcept {
-	(void) e;
-	(void) delta;
-	if (m_shape_processing_system->circle_rectangle_collision(next_pos, radius, rect_position, rect_size)) {
-		// next player position inside bounding box -> pruefen ob polygon-collision
-
-		float closest_dist = config::FLOAT_MAX;
-		glm::vec2 closest_point = {config::FLOAT_MAX, config::FLOAT_MAX};
-
-		size_t n = world_vertices.size();
-		for (size_t i = 0; i < n; i++) {
-			glm::vec2 v1 = world_vertices[i];
-			glm::vec2 v2 = world_vertices[(i+1)%n];
-			glm::vec2 closest_point_on_line = m_shape_processing_system->get_closest_point_on_line(next_pos, v1, v2);
-			float dist = glm::distance(next_pos, closest_point_on_line);
-			if (dist < closest_dist) {
-				closest_dist = dist;
-				closest_point = closest_point_on_line;
-			}
-		}
-		if (closest_dist < radius) {
-			/*
-			if (m_app->debug_mode) {
-				std::cout<<"POLYGON-COLLISION: "//<<e
-				<<" | player_pos:"<<next_pos.x<<" "<<next_pos.y
-				<<" | rect: "<<rect_position.x<<" "<<rect_position.y
-				<<" , "<<rect_size.x<<" "<<rect_size.y
-				<<" | dist:"<<closest_dist
-				<<"| delta: "<<delta<<std::endl;
-			}
-			*/
-			// Polygon Collision
-			glm::vec2 dir = glm::normalize(next_pos - closest_point);
-			float depth = radius - closest_dist;
-			next_pos += dir*(depth+config::EPSILON);
-			float in_wall = glm::dot(vel, dir);
-			if (in_wall < 0.0f) {
-				// player inside polygon -> vel correction
-				vel -= dir * in_wall;
-			}
-			if (dir.y > 0.7f) {
-				// Player falling on polygon -> on ground
-				on_ground = true;
-				vel.y = glm::max(vel.y, 0.0f);
-			}
-			return true;
-		}
-	}
-	return false;
-}
 
 glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 

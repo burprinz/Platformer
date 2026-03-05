@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-#include "input.h"
 #include "../config.h"
 
 static void glfwErrorCallback(int error, const char* description) {
@@ -60,16 +59,10 @@ std::optional<Application> Application::init(const CommandLineOptions& options) 
 
 	self.m_registry = Registry::init();
 
-	self.m_app = AppRegistry::init();
-
-	self.m_shape_processing_system = new ShapeProcessingSystem;
-	*self.m_shape_processing_system = ShapeProcessingSystem::init();
-
-
-	self.m_world = WorldSystem::init(self.m_window, self.m_registry, self.m_app, self.m_audio_engine);
-	self.m_physics = PhysicsSystem::init(self.m_window, self.m_registry, self.m_audio_engine, self.m_shape_processing_system);
+	self.m_world = WorldSystem::init(self.m_window, self.m_registry, self.m_audio_engine);
+	self.m_physics = PhysicsSystem::init(self.m_window, self.m_registry, self.m_audio_engine);
 	self.m_particles = ParticleSystem::init(self.m_window, self.m_registry);
-	self.m_render = RenderSystem::init(self.m_window, self.m_registry, self.m_app, self.m_particles);
+	self.m_render = RenderSystem::init(self.m_window, self.m_registry, self.m_particles);
 	self.m_camera = CameraSystem::init(self.m_registry);
 
 	return self;
@@ -83,7 +76,6 @@ void Application::deinit() noexcept {
 	m_particles->deinit();
 
 	delete m_registry;
-	delete m_app;
 	m_window->deinit();
 	delete m_window;
 	glfwTerminate();
@@ -141,7 +133,7 @@ void Application::reset() noexcept {
 	m_registry->ecs.clear();
 
 	// reset bools
-	m_app->debugMode() = false;
+	m_registry->debug_mode = false;
 
 	// initialize the player
 	entt::entity player_id = m_registry->generate_new_player();

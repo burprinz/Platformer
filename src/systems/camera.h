@@ -1,6 +1,6 @@
 #pragma once
 
-#include <registry.h>
+#include <core/registry.h>
 
 constexpr float CAMERA_SMOOTHING_FACTOR = 3.0f;
 

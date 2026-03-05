@@ -1,10 +1,8 @@
 #pragma once
 
-#include <registry.h>
-#include <systems/ShapeProcessing.h>
+#include <core/registry.h>
 #include <systems/audio.h>
 
-#include "app_registry.h"
 #include "window.h"
 
 struct LightBeamCollision
@@ -16,7 +14,7 @@ struct LightBeamCollision
 
 class PhysicsSystem {
 	public:
-		static PhysicsSystem init(Window* window, Registry* registry, AudioSystem* audio_engine, ShapeProcessingSystem* shape_processing) noexcept;
+		static PhysicsSystem init(Window* window, Registry* registry, AudioSystem* audio_engine) noexcept;
 		void deinit() noexcept;
 
 		void step(const float delta) noexcept;
@@ -42,5 +40,4 @@ class PhysicsSystem {
         Window* m_window;
 		Registry* m_registry;
 		AudioSystem* m_audio_engine;
-		ShapeProcessingSystem* m_shape_processing_system;
 };

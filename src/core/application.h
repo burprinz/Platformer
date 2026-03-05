@@ -7,7 +7,6 @@
 
 #include <./window.h>
 
-#include "app_registry.h"
 #include "../systems/particle.h"
 
 
@@ -23,8 +22,6 @@ class Application {
 	private:
 		Window* m_window;
 
-		AppRegistry* m_app;
-
 		AudioSystem* m_audio_engine;
 		CameraSystem m_camera;
 		ParticleSystem* m_particles;
@@ -32,7 +29,6 @@ class Application {
 		WorldSystem m_world;
 		PhysicsSystem m_physics;
 		RenderSystem m_render;
-		ShapeProcessingSystem* m_shape_processing_system;
 
 		Registry* m_registry;
 

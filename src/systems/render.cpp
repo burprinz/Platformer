@@ -1,10 +1,9 @@
 #include "render.h"
 #include "config.h"
-#include "registry.h"
+#include "core/registry.h"
 
 #include <iostream>
 
-#include "app_registry.h"
 
 constexpr int LIGHT_EFFECT_FRAMECOUNT = 32;          // number of frames in light effect texture
 constexpr float LIGHT_EFFECT_ANIMATION_SPEED = 0.1f;        // time (in seconds) per frame
@@ -12,15 +11,14 @@ constexpr float SHADOW_EXTEND_DISTANCE = 100.0f;  // distance of shadow cast
 
 
 
-RenderSystem RenderSystem::init(Window *window, Registry *registry, AppRegistry* app, ParticleSystem* particles) noexcept {
+RenderSystem RenderSystem::init(Window *window, Registry *registry, ParticleSystem* particles) noexcept {
     RenderSystem self;
 
     self.m_window = window;
     self.m_registry = registry;
-	self.m_app = app;
 	self.m_particles = particles;
-    self.m_app->viewport.m_origin = glm::uvec2(0);
-	self.m_app->viewport.m_size = self.m_window->windowExtent();
+    self.m_registry->m_viewport.m_origin = glm::uvec2(0);
+	self.m_registry->m_viewport.m_size = self.m_window->windowExtent();
 
     // load resources for rendering
     self.m_player_mesh = Mesh::init(assets::Mesh::player).value();
@@ -299,7 +297,7 @@ void RenderSystem::spritesheetPingpongAnimation(int frameCount, float animationS
 
 
 void RenderSystem::step(const float /*delta*/) noexcept {
-    Viewport viewport = m_app->viewport;
+    Viewport viewport = m_registry->m_viewport;
 
 
 	// Camera-derived projection (world scrolling)
@@ -638,8 +636,8 @@ void RenderSystem::drawPolygon(glm::vec2 position, glm::vec2 scale, PolygonShape
 
 void RenderSystem::onResizeCallback(GLFWwindow *, int width, int height) noexcept {
     auto [origin, size] = computeViewportConfig({width, height});
-	m_app->viewport.m_origin = origin;
-    m_app->viewport.m_size = size;
+	m_registry->m_viewport.m_origin = origin;
+    m_registry->m_viewport.m_size = size;
 
     // reinitialize off-screen framebuffer
     m_intermediate_framebuffer.deinit();

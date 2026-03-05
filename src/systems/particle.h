@@ -3,7 +3,7 @@
 // Created by luisb on 07.01.2026.
 //
 
-#include "registry.h"
+#include "core/registry.h"
 #include "window.h"
 
 constexpr size_t MAX_PLAYER_DUST = 100;

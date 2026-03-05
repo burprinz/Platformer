@@ -8,12 +8,11 @@ struct PlatformDef {
     glm::vec2 size;
 };
 
-WorldSystem WorldSystem::init(Window *window, Registry *registry,AppRegistry *app_registry, AudioSystem *audio_engine) noexcept {
+WorldSystem WorldSystem::init(Window *window, Registry *registry, AudioSystem *audio_engine) noexcept {
     WorldSystem self;
 
     self.m_window = window;
     self.m_registry = registry;
-    self.m_app = app_registry;
 
     self.m_audio_engine = audio_engine;
 
@@ -51,7 +50,15 @@ void WorldSystem::reset() noexcept {
     m_registry->ecs.emplace<Position>(platform, glm::vec2(0.0f, 0.2f));
     m_registry->ecs.emplace<Dimension>(platform, glm::vec2(0.4f, 0.1f));
 
+    platform = m_registry->ecs.create();
+    m_registry->ecs.emplace<Platform>(platform);
+    m_registry->ecs.emplace<Position>(platform, glm::vec2(0.7f, 0.4f));
+    m_registry->ecs.emplace<Dimension>(platform, glm::vec2(0.4f, 0.1f));
 
+    platform = m_registry->ecs.create();
+    m_registry->ecs.emplace<Platform>(platform);
+    m_registry->ecs.emplace<Position>(platform, glm::vec2(1.4f, 0.6f));
+    m_registry->ecs.emplace<Dimension>(platform, glm::vec2(0.4f, 0.1f));
 }
 
 

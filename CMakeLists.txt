@@ -119,7 +119,7 @@ add_executable(${PROJECT_NAME}
 	${PROJECT_SOURCE_DIR}/src/common.cpp
 	${PROJECT_SOURCE_DIR}/src/assets.cpp
         src/core/application.cpp
-	${PROJECT_SOURCE_DIR}/src/registry.cpp
+	${PROJECT_SOURCE_DIR}/src/core/registry.cpp
 	${PROJECT_SOURCE_DIR}/src/window.cpp
 
 	${PROJECT_SOURCE_DIR}/src/systems/world.cpp
@@ -135,12 +135,8 @@ add_executable(${PROJECT_NAME}
 		src/systems/camera.h
 		src/systems/particle.cpp
 		src/systems/particle.h
-        src/systems/ShapeProcessing.h
-		src/systems/ShapeProcessing.cpp
 		src/core/util.h
-		src/core/input.cpp
-		src/app_registry.cpp
-		src/app_registry.h)
+)
 
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

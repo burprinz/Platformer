@@ -18,6 +18,11 @@ Registry* Registry::init() noexcept {
 	self->keys.insert({"shift", false});
 	self->keys.insert({"strg", false});
 
+	self->m_viewport.m_origin = glm::uvec2(0);
+	self->m_viewport.m_size   = glm::uvec2(0);
+
+	self->debug_mode = false;
+
 	return self;
 }
 

@@ -1,13 +1,12 @@
 #pragma once
 
-#include <registry.h>
+#include <core/registry.h>
 #include <window.h>
 
 #include <utils/mesh.h>
 #include <utils/shader.h>
 #include <utils/framebuffer.h>
 
-#include "app_registry.h"
 #include "particle.h"
 #include "freetype/freetype.h"
 
@@ -23,7 +22,7 @@ class RenderSystem {
 		RenderSystem() = default;
 		~RenderSystem() = default;
 
-		static RenderSystem init(Window* window, Registry* registry, AppRegistry* app, ParticleSystem* particles) noexcept;
+		static RenderSystem init(Window* window, Registry* registry, ParticleSystem* particles) noexcept;
 		void deinit() noexcept;
 		void step(const float delta) noexcept;
 		void reset() noexcept;
@@ -130,7 +129,6 @@ class RenderSystem {
 
 	private:
 		Registry* m_registry;
-		AppRegistry* m_app;
 		Window* m_window;
 		ParticleSystem* m_particles;
 
