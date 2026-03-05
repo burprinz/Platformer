@@ -174,6 +174,25 @@ void Draw::fillRectBySize(glm::vec2 center, glm::vec2 size, glm::vec3 color, flo
     fillRect(tl, tr, bl, br, color, opacity, view, projection);
 }
 
+void Draw::drawRect(glm::vec2 topleft, glm::vec2 topright,glm::vec2 bottomleft, glm::vec2 bottomright, glm::vec3 color, glm::mat4 view, glm::mat4 projection) noexcept {
+    drawLine(topleft, topright, color, view, projection);
+    drawLine(topleft, bottomleft, color, view, projection);
+    drawLine(bottomright, bottomleft, color, view, projection);
+    drawLine(bottomright, topright, color, view, projection);
+}
+
+void Draw::drawRectBySize(glm::vec2 center, glm::vec2 size, glm::vec3 color, glm::mat4 view, glm::mat4 projection) noexcept {
+    float w = size.x/2;
+    float h = size.y/2;
+
+    glm::vec2 tl = center + glm::vec2{-w, h};
+    glm::vec2 tr = center + glm::vec2{w, h};
+    glm::vec2 bl = center + glm::vec2{-w, -h};
+    glm::vec2 br = center + glm::vec2{w, -h};
+
+    drawRect(tl, tr, bl, br, color, view, projection);
+}
+
 void Draw::fillCircle(glm::vec2 position, float radius, glm::vec3 color, float opacity, glm::mat4 view, glm::mat4 projection) noexcept {
     glm::vec2 tl = {-radius, radius};
     glm::vec2 tr = {radius, radius};

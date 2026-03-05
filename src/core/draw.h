@@ -34,8 +34,8 @@ public:
      */
     void drawLine(glm::vec2 start, glm::vec2 end, glm::vec3 color, glm::mat4 view, glm::mat4 projection) noexcept;
 
-    //TODO void drawRectBySize(glm::vec2 center, glm::vec2 size, glm::vec3 color, float opacity, glm::mat4 view, glm::mat4 projection) noexcept;
-    //TODO void drawRect(glm::vec2 topleft, glm::vec2 topright,glm::vec2 bottomleft, glm::vec2 bottomright, glm::vec3 color, float opacity, glm::mat4 view, glm::mat4 projection) noexcept;
+    void drawRectBySize(glm::vec2 center, glm::vec2 size, glm::vec3 color, glm::mat4 view, glm::mat4 projection) noexcept;
+    void drawRect(glm::vec2 topleft, glm::vec2 topright,glm::vec2 bottomleft, glm::vec2 bottomright, glm::vec3 color, glm::mat4 view, glm::mat4 projection) noexcept;
     void fillRectBySize(glm::vec2 center, glm::vec2 size, glm::vec3 color, float opacity, glm::mat4 view, glm::mat4 projection) noexcept;
     void fillRect(glm::vec2 topleft, glm::vec2 topright,glm::vec2 bottomleft, glm::vec2 bottomright, glm::vec3 color, float opacity, glm::mat4 view, glm::mat4 projection) noexcept;
 
