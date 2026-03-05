@@ -32,6 +32,10 @@ struct Radius {
     float r;
 };
 
+struct Scale {
+    glm::vec2 scale;
+};
+
 struct BoundingBox {
     glm::vec2 min;
     glm::vec2 max;
@@ -43,9 +47,6 @@ struct PolygonShape {
     BoundingBox bounding_box;       // Axis-aligned bounding box
 };
 
-struct Scale {
-    glm::vec2 scale;
-};
 
 
 /**

@@ -7,6 +7,7 @@
 
 #include <./window.h>
 
+#include "draw.h"
 #include "../systems/particle.h"
 
 
@@ -30,6 +31,7 @@ class Application {
 		PhysicsSystem m_physics;
 		RenderSystem m_render;
 
+		Draw* m_draw;
 		Registry* m_registry;
 
 		void reset() noexcept;

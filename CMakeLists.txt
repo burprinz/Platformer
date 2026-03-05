@@ -136,6 +136,8 @@ add_executable(${PROJECT_NAME}
 		src/systems/particle.cpp
 		src/systems/particle.h
 		src/core/util.h
+		src/core/draw.cpp
+		src/core/draw.h
 )
 
 

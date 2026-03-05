@@ -58,11 +58,12 @@ std::optional<Application> Application::init(const CommandLineOptions& options) 
 	*self.m_audio_engine = AudioSystem::init();
 
 	self.m_registry = Registry::init();
+	self.m_draw = Draw::init(self.m_window);
 
 	self.m_world = WorldSystem::init(self.m_window, self.m_registry, self.m_audio_engine);
 	self.m_physics = PhysicsSystem::init(self.m_window, self.m_registry, self.m_audio_engine);
 	self.m_particles = ParticleSystem::init(self.m_window, self.m_registry);
-	self.m_render = RenderSystem::init(self.m_window, self.m_registry, self.m_particles);
+	self.m_render = RenderSystem::init(self.m_window, self.m_registry, self.m_particles, self.m_draw);
 	self.m_camera = CameraSystem::init(self.m_registry);
 
 	return self;
@@ -74,6 +75,8 @@ void Application::deinit() noexcept {
 	m_render.deinit();
 	m_audio_engine->deinit();
 	m_particles->deinit();
+
+	m_draw->deinit();
 
 	delete m_registry;
 	m_window->deinit();
