@@ -17,6 +17,8 @@ Registry* Registry::init() noexcept {
 	self->keys.insert({"space", false});
 	self->keys.insert({"shift", false});
 	self->keys.insert({"strg", false});
+	self->keys.insert({"mouse_left", false});
+	self->keys.insert({"mouse_right", false});
 
 	self->m_viewport.m_origin = glm::uvec2(0);
 	self->m_viewport.m_size   = glm::uvec2(0);
@@ -46,6 +48,19 @@ void Registry::on_key_callback(int key, int action) noexcept {
 			keys.insert_or_assign("space", active);
 			break;
 
+	}
+}
+
+void Registry::on_mouse_callback(int key, int action) noexcept {
+	if (action != GLFW_PRESS && action != GLFW_RELEASE) return;
+	bool active = action==GLFW_PRESS;
+	switch (key) {
+		case GLFW_MOUSE_BUTTON_1:
+			keys.insert_or_assign("mouse_left", active);
+			break;
+		case GLFW_MOUSE_BUTTON_2:
+			keys.insert_or_assign("mouse_right", active);
+			break;
 	}
 }
 

@@ -3,6 +3,16 @@
 #include <common.h>
 #include <entt/entt.hpp>
 
+
+constexpr int IDLE = 0;
+constexpr int ATTACKING = 1;
+
+constexpr float ATTACK_LENGTH = 0.35f;
+
+constexpr glm::vec2 PLAYER_ATTACK_HITBOX_SIZE = {0.35, 0.15};
+
+enum Direction {LEFT, UP, RIGHT, DOWN};
+
 struct Viewport{
     glm::uvec2 m_origin;
     glm::uvec2 m_size;
@@ -12,8 +22,6 @@ struct Player {
     float velocity = .5f;
     float sprint_velocity = 1.f;
     float sneak_velocity = .2f;
-    bool falling = true;
-    float max_health = 100.f;
 };
 
 struct Position {
@@ -58,18 +66,34 @@ struct MobState {
     bool on_left_wall = false;
     bool on_right_wall = false;
     bool in_air = false;
+    bool falling = false;
+    bool climbing = false;
+    bool can_double_jump = false;
 };
 
 /**
  * Objects
  */
 
-struct Platform {
+struct Rect {
+    glm::vec2 pos;
+    glm::vec2 size;
+};
 
+struct Platform {
+    bool can_climb = true;
 };
 
 
-
+/**
+ * Combat
+ */
+struct AttackState {
+    int state = IDLE;
+    float attack_timer = 0.f;
+    Rect attack_box;
+    Direction attack_dir;
+};
 
 
 
@@ -123,6 +147,7 @@ public:
     bool debug_mode = false;
 
     void on_key_callback(int key, int action) noexcept;
+    void on_mouse_callback(int key, int action) noexcept;
 
 
     inline entt::entity player() noexcept { return m_player; }

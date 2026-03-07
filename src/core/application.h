@@ -9,6 +9,7 @@
 
 #include "draw.h"
 #include "../systems/particle.h"
+#include "systems/combat.h"
 
 
 class Application {
@@ -29,6 +30,7 @@ class Application {
 
 		WorldSystem m_world;
 		PhysicsSystem m_physics;
+		CombatSystem m_combat;
 		RenderSystem m_render;
 
 		Draw* m_draw;

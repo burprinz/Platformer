@@ -2,7 +2,9 @@
 
 #include <common.h>
 
-class Window {
+#include "config.h"
+
+ class Window {
 	public:
 		using ResizeFunction = std::function<void(GLFWwindow*, int, int)>;
 		using KeyFunction = std::function<void(GLFWwindow*, int, int, int, int)>;
@@ -34,6 +36,27 @@ class Window {
 			glm::vec2 scale;
 			glfwGetWindowContentScale(m_handle, &scale.x, &scale.y);
 			return scale;
+		}
+
+		inline glm::vec2 getMousePosition() {
+			glm::vec2 mouse_pos = {
+				config::CAMERA_VIEW_WIDTH/m_window_extent.x*m_cursor_position.x,
+				config::CAMERA_VIEW_HEIGHT-(config::CAMERA_VIEW_HEIGHT/m_window_extent.y*m_cursor_position.y)
+			};
+			return mouse_pos;
+		}
+
+		inline float calcRelativeMouseAngleInRad(glm::vec2 position) noexcept {
+			glm::vec2 mouse_pos = getMousePosition();
+			float angle = atan2(mouse_pos.x-position.x, mouse_pos.y-position.y)-glm::pi<float>()/2.0f;
+			angle = std::fmod(angle, glm::pi<float>()*2.f);
+			if (angle < 0) angle += glm::pi<float>()*2.f;
+			return angle;
+		}
+
+ 	inline float calcRelativeMouseAngleInDeg(glm::vec2 position) noexcept {
+			float rad_angle = calcRelativeMouseAngleInRad(position);
+			return glm::degrees(rad_angle);
 		}
 
 	private:

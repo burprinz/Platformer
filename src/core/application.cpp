@@ -61,6 +61,7 @@ std::optional<Application> Application::init(const CommandLineOptions& options) 
 	self.m_draw = Draw::init(self.m_window, self.m_registry);
 
 	self.m_world = WorldSystem::init(self.m_window, self.m_registry, self.m_audio_engine);
+	self.m_combat = CombatSystem::init(self.m_window, self.m_registry);
 	self.m_physics = PhysicsSystem::init(self.m_window, self.m_registry, self.m_audio_engine);
 	self.m_particles = ParticleSystem::init(self.m_window, self.m_registry);
 	self.m_render = RenderSystem::init(self.m_window, self.m_registry, self.m_particles, self.m_draw);
@@ -117,6 +118,7 @@ void Application::run() noexcept {
 
 		m_world.step(delta_time);
 
+		m_combat.step(delta_time);
 
 		physics_accumulator += delta_time;
 		while (physics_accumulator >= config::PHYSICS_TIME_STEP) {
@@ -151,6 +153,7 @@ void Application::reset() noexcept {
 	m_registry->ecs.emplace<Radius>(player_id, 0.1f);
 	m_registry->ecs.emplace<Dimension>(player_id, glm::vec2(0.1, 0.3));
 	m_registry->ecs.emplace<MobState>(player_id);
+	m_registry->ecs.emplace<AttackState>(player_id);
 
 	// reset systems
 	m_world.reset();
@@ -165,10 +168,9 @@ void Application::onKeyCallback(GLFWwindow* /*window*/, int key, int /*scancode*
 	m_registry->on_key_callback(key, action);
 }
 
-void Application::onMouseCallback(GLFWwindow *window, int button, int action, int mods) noexcept {
+void Application::onMouseCallback(GLFWwindow* /*window*/, int button, int action, int /*mods*/) noexcept {
 	// Preserve old behavior: mouse_left is only updated while IN_GAME
-	(void) window;
-	(void) (button + action + mods);
+	m_registry->on_mouse_callback(button, action);
 }
 
 void Application::onResizeCallback(GLFWwindow* window, int width, int height) noexcept {

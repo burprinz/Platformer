@@ -138,6 +138,8 @@ add_executable(${PROJECT_NAME}
 		src/core/util.h
 		src/core/draw.cpp
 		src/core/draw.h
+		src/systems/combat.cpp
+		src/systems/combat.h
 )
 
 

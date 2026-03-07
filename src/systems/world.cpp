@@ -57,8 +57,13 @@ void WorldSystem::reset() noexcept {
 
     platform = m_registry->ecs.create();
     m_registry->ecs.emplace<Platform>(platform);
-    m_registry->ecs.emplace<Position>(platform, glm::vec2(1.4f, 0.6f));
+    m_registry->ecs.emplace<Position>(platform, glm::vec2(1.4f, 0.8f));
     m_registry->ecs.emplace<Dimension>(platform, glm::vec2(0.4f, 0.1f));
+
+    platform = m_registry->ecs.create();
+    m_registry->ecs.emplace<Platform>(platform);
+    m_registry->ecs.emplace<Position>(platform, glm::vec2(0.7f, 1.35f));
+    m_registry->ecs.emplace<Dimension>(platform, glm::vec2(0.3f, 0.1f));
 }
 
 

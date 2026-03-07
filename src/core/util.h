@@ -2,6 +2,9 @@
 
 #include <common.h>
 
+#include "config.h"
+#include "window.h"
+
 // Template Functions for often reused Function calls searched for and created with help of ChatGPT
 
 //Non-owning pointer guard

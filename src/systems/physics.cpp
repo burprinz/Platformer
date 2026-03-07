@@ -81,23 +81,54 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 
 	// Key input (A,D)
 	if (m_registry->keys["d"]) {
-		vel.x = speed;
+		vel.x += 0.1;
+		if (vel.x > speed) vel.x = speed;
 	} else if (m_registry->keys["a"]) {
-		vel.x = -speed;
+		vel.x -= 0.1;
+		if (vel.x < -speed) vel.x = -speed;
 	} else {
 		vel.x = 0;
 	}
 
 	MobState player_state = m_registry->ecs.get<MobState>(m_registry->player());
-	// Key input (SPACE & W)
-	if (player_state.on_ground && (m_registry->keys["w"] || m_registry->keys["space"])) {
-		vel.y = 1.8f;
-	} else {
-		// Gravity
-		vel.y -= 9.81 * delta;
-		if (vel.y < -3.f) vel.y = -3.f;
+	AttackState attack_state = m_registry->ecs.get<AttackState>(m_registry->player());
+
+	if (player_state.in_air && attack_state.attack_dir == DOWN) {
+		// Check if pogo possible
 	}
 
+	if ((player_state.on_ground // On ground
+		|| player_state.climbing // On wall
+		|| player_state.can_double_jump // In air with double jump
+		)
+		&& m_registry->keys["space"]) {
+
+		vel.y = 1.8f;
+		if (player_state.climbing) {
+			if (player_state.on_left_wall) {
+				vel.x = speed*1.5;
+				vel.y = 2.0f;
+			} else if (player_state.on_right_wall) {
+				vel.x = -speed*1.5;
+				vel.y = 2.0f;
+			}
+		} else if (player_state.in_air) {
+			vel.y = 2.0f;
+			player_state.can_double_jump = false;
+		}
+		m_registry->keys["space"] = false;
+	} else {
+		// Gravity
+		if (player_state.climbing) {
+			vel.y = 0;
+		} else {
+			vel.y -= 9.81 * delta;
+			if (vel.y < -3.f) vel.y = -3.f;
+		}
+
+	}
+
+	m_registry->ecs.replace<MobState>(m_registry->player(), player_state);
 	return vel;
 }
 
@@ -105,13 +136,12 @@ void PhysicsSystem::handleCollision(float delta, entt::entity entity_id, glm::ve
 
 	glm::vec2 pos = m_registry->ecs.get<Position>(entity_id).pos;
 	glm::vec2 size = m_registry->ecs.get<Dimension>(entity_id).dim;
+	MobState state = m_registry->ecs.get<MobState>(entity_id);;
 
 	bool on_ground = false;
 	bool on_ceiling = false;
 	bool on_left = false;
 	bool on_right = false;
-
-	(void) (on_ground && on_left && on_right && on_ceiling);
 
 	glm::vec2 next_pos = pos + vel*delta;
 
@@ -161,12 +191,14 @@ void PhysicsSystem::handleCollision(float delta, entt::entity entity_id, glm::ve
 		on_ground = true;
 	}
 
-	MobState state;
 	state.on_ground = on_ground;
 	state.on_ceiling = on_ceiling;
 	state.on_left_wall = on_left;
 	state.on_right_wall = on_right;
 	state.in_air = !(on_ground || on_ceiling || on_left || on_right);
+	state.falling = !state.on_ground && vel.y <= 0;
+	state.climbing = state.falling && (on_left || on_right);
+	if (state.on_ground || state.climbing) state.can_double_jump = true;
 
 	m_registry->ecs.replace<Position>(entity_id, next_pos);
 	m_registry->ecs.replace<Velocity>(entity_id, vel);
