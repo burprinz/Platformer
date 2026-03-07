@@ -18,8 +18,8 @@ WorldSystem WorldSystem::init(Window *window, Registry *registry, AudioSystem *a
 
     self.m_random_engine = std::default_random_engine(std::random_device()());
 
-
     self.m_reset = true;
+
 
     return self;
 }
@@ -31,7 +31,7 @@ void WorldSystem::reset() noexcept {
     m_reset = false;
 
     entt::entity platform = m_registry->ecs.create();
-    m_registry->ecs.emplace<Platform>(platform);
+    m_registry->ecs.emplace<Platform>(platform, false, true);
     m_registry->ecs.emplace<Position>(platform, glm::vec2(0.0f, 0.0f));
     m_registry->ecs.emplace<Dimension>(platform, glm::vec2(2.0f, 0.1f));
 
@@ -41,7 +41,7 @@ void WorldSystem::reset() noexcept {
     m_registry->ecs.emplace<Dimension>(platform, glm::vec2(0.1f, 2.0f));
 
     platform = m_registry->ecs.create();
-    m_registry->ecs.emplace<Platform>(platform);
+    m_registry->ecs.emplace<Platform>(platform, false, true);
     m_registry->ecs.emplace<Position>(platform, glm::vec2(1.9f, 0.1f));
     m_registry->ecs.emplace<Dimension>(platform, glm::vec2(0.1f, 2.0f));
 
@@ -56,7 +56,7 @@ void WorldSystem::reset() noexcept {
     m_registry->ecs.emplace<Dimension>(platform, glm::vec2(0.4f, 0.1f));
 
     platform = m_registry->ecs.create();
-    m_registry->ecs.emplace<Platform>(platform);
+    m_registry->ecs.emplace<Platform>(platform, false, false);
     m_registry->ecs.emplace<Position>(platform, glm::vec2(1.4f, 0.8f));
     m_registry->ecs.emplace<Dimension>(platform, glm::vec2(0.4f, 0.1f));
 

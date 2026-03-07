@@ -4,6 +4,7 @@
 #include <cmath>
 #include <fstream>
 
+#include "core/util.h"
 #include "config.h"
 #include "world.h"
 
@@ -78,6 +79,7 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 
 	// Update player velocity
 	glm::vec2 vel = m_registry->ecs.get<Velocity>(pl).vel;
+	glm::vec2 pos =  m_registry->ecs.get<Position>(pl).pos;
 
 	// Key input (A,D)
 	if (m_registry->keys["d"]) {
@@ -92,9 +94,36 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 
 	MobState player_state = m_registry->ecs.get<MobState>(m_registry->player());
 	AttackState attack_state = m_registry->ecs.get<AttackState>(m_registry->player());
+	Player player = m_registry->ecs.get<Player>(m_registry->player());
 
-	if (player_state.in_air && attack_state.attack_dir == DOWN) {
-		// Check if pogo possible
+
+
+	for (entt::entity e : m_registry->hit_entities) {
+		if (!m_registry->ecs.get<Platform>(e).touchable) {
+			vel = {0, 0};
+			m_registry->ecs.replace<Position>(pl, player.lastSafePosition);
+			m_registry->hit_entities.clear();
+			return vel;
+		}
+	}
+	m_registry->hit_entities.clear();
+
+	if (player_state.on_ground) {
+		player.lastSafePosition = pos;
+	}
+
+
+	// Ceck if player can pogo
+	if (attack_state.state == ATTACKING && player_state.in_air && attack_state.attack_dir == DOWN) {
+		Rect attack_hitbox = attack_state.attack_box;
+		attack_hitbox.pos += pos;
+		for (entt::entity platform_id : m_registry->ecs.view<Platform>()) {
+			Rect platform_hitbox = Rect(m_registry->ecs.get<Position>(platform_id).pos, m_registry->ecs.get<Dimension>(platform_id).dim);
+			if (isFullyAboveRect(pos, platform_hitbox) && rectCollision(attack_hitbox, platform_hitbox)) {
+				player_state.can_double_jump = true;
+				vel.y = 1.8f;
+			}
+		}
 	}
 
 	if ((player_state.on_ground // On ground
@@ -129,6 +158,7 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 	}
 
 	m_registry->ecs.replace<MobState>(m_registry->player(), player_state);
+	m_registry->ecs.replace<Player>(m_registry->player(), player);
 	return vel;
 }
 
@@ -136,7 +166,8 @@ void PhysicsSystem::handleCollision(float delta, entt::entity entity_id, glm::ve
 
 	glm::vec2 pos = m_registry->ecs.get<Position>(entity_id).pos;
 	glm::vec2 size = m_registry->ecs.get<Dimension>(entity_id).dim;
-	MobState state = m_registry->ecs.get<MobState>(entity_id);;
+	MobState state = m_registry->ecs.get<MobState>(entity_id);
+
 
 	bool on_ground = false;
 	bool on_ceiling = false;
@@ -144,6 +175,8 @@ void PhysicsSystem::handleCollision(float delta, entt::entity entity_id, glm::ve
 	bool on_right = false;
 
 	glm::vec2 next_pos = pos + vel*delta;
+
+	entt::entity side_touch_entity = entt::null;
 
 	for (entt::entity platform_id : m_registry->ecs.view<Platform>()) {
 		glm::vec2 platform_pos = m_registry->ecs.get<Position>(platform_id).pos;
@@ -153,6 +186,7 @@ void PhysicsSystem::handleCollision(float delta, entt::entity entity_id, glm::ve
 			next_pos.x + size.x >= platform_pos.x &&
 			next_pos.y <= platform_pos.y + platform_size.y &&
 			next_pos.y + size.y >= platform_pos.y) {
+			m_registry->hit_entities.push_back(platform_id);
 
 			float top_dist = pos.y - (platform_pos.y + platform_size.y);
 			float bot_dist = platform_pos.y - (pos.y + size.y);
@@ -177,10 +211,12 @@ void PhysicsSystem::handleCollision(float delta, entt::entity entity_id, glm::ve
 				next_pos.x = platform_pos.x - size.x;
 				vel.x = 0;
 				on_right = true;
+				side_touch_entity = platform_id;
 			} else if (max_dist == right_dist && vel.x < 0) {
 				next_pos.x = platform_pos.x + platform_size.x;
 				vel.x = 0;
 				on_left = true;
+				side_touch_entity = platform_id;
 			}
 		}
 	}
@@ -199,6 +235,12 @@ void PhysicsSystem::handleCollision(float delta, entt::entity entity_id, glm::ve
 	state.falling = !state.on_ground && vel.y <= 0;
 	state.climbing = state.falling && (on_left || on_right);
 	if (state.on_ground || state.climbing) state.can_double_jump = true;
+
+
+	if (side_touch_entity != entt::null) {
+		Platform pl = m_registry->ecs.get<Platform>(side_touch_entity);
+		state.climbing = state.climbing && pl.can_climb;
+	}
 
 	m_registry->ecs.replace<Position>(entity_id, next_pos);
 	m_registry->ecs.replace<Velocity>(entity_id, vel);

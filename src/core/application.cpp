@@ -146,8 +146,9 @@ void Application::reset() noexcept {
 
 	// initialize the player
 	entt::entity player_id = m_registry->generate_new_player();
+	glm::vec2 player_start_pos = {0.5f, 1.0f};
 	m_registry->ecs.emplace<Player>(player_id);
-	m_registry->ecs.emplace<Position>(player_id, glm::vec2(1.77f, 1.0f));
+	m_registry->ecs.emplace<Position>(player_id, player_start_pos);
 	m_registry->ecs.emplace<Velocity>(player_id, glm::vec2(0.f, 0.f));
 	m_registry->ecs.emplace<Scale>(player_id, glm::vec2(-0.1f, 0.1f));
 	m_registry->ecs.emplace<Radius>(player_id, 0.1f);

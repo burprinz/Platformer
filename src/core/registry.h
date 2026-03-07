@@ -22,6 +22,8 @@ struct Player {
     float velocity = .5f;
     float sprint_velocity = 1.f;
     float sneak_velocity = .2f;
+
+    glm::vec2 lastSafePosition;
 };
 
 struct Position {
@@ -82,6 +84,7 @@ struct Rect {
 
 struct Platform {
     bool can_climb = true;
+    bool touchable = true;
 };
 
 
@@ -161,6 +164,7 @@ public:
 
     std::map<std::string, bool> keys;
 
+    std::vector<entt::entity> hit_entities;
 
 private:
 

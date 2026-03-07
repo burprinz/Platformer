@@ -45,6 +45,7 @@ void RenderSystem::step(const float /*delta*/) noexcept {
     // Draw Plattform
     {
         for (entt::entity platform_entity: m_registry->ecs.view<Platform>()) {
+        	Platform pl = m_registry->ecs.get<Platform>(platform_entity);
             glm::vec2 pos1 = m_registry->ecs.get<Position>(platform_entity).pos;
             glm::vec2 size = m_registry->ecs.get<Dimension>(platform_entity).dim;
 
@@ -54,6 +55,11 @@ void RenderSystem::step(const float /*delta*/) noexcept {
 
         	float opacity = 1.f;
         	color = glm::vec3{ 1.f, 0.f, 0.f };
+        	if (!pl.touchable) {
+        		color = {1.f,1.f,0.f};
+        	} else if (!pl.can_climb) {
+        		color = {0.1176f,0.349f,0.2706f};
+        	}
 
         	m_draw->fillRect(pos1, pos2, pos3, pos4, color, opacity);
 		}
