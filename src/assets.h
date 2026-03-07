@@ -40,6 +40,7 @@ enum struct Texture {
 	mirror,
 	door,
 	player_animation,
+	test_room,
 	count
 };
 

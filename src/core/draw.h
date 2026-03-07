@@ -71,6 +71,11 @@ public:
     float getStringWidth(std::string text, float scale) noexcept;
 
 
+    /**
+     *Texture
+     */
+    void drawTexture(Texture& texture, glm::vec2 position, glm::vec2 scale) noexcept;
+
     /*
      * Helpers
      */
@@ -93,7 +98,7 @@ private:
     Shader m_platform_shader;
     Shader m_text_shader;
     //Shader m_animation_shader;
-    //Shader m_sprite_shader;
+    Shader m_sprite_shader;
 
     Shader m_circle_shader;
 
@@ -101,8 +106,8 @@ private:
 
     //Texture m_player_animation_texture;
 
-    //GLuint m_quad_vao;
-    //GLuint m_quad_ebo;
+    GLuint m_quad_vao;
+    GLuint m_quad_ebo;
 
     struct Line { glm::vec2 position; };
     GLuint m_line_vao;

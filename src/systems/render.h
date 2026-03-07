@@ -26,4 +26,7 @@ class RenderSystem {
 		Window* m_window;
 		ParticleSystem* m_particles;
 		Draw* m_draw;
+
+
+		Texture m_test_room_texture;
 };

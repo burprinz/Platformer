@@ -19,10 +19,13 @@ RenderSystem RenderSystem::init(Window *window, Registry *registry, ParticleSyst
 	self.m_particles = particles;
 	self.m_draw = draw;
 
+	self.m_test_room_texture = Texture::init(assets::Texture::test_room);
+
     return self;
 }
 
 void RenderSystem::deinit() noexcept {
+	m_test_room_texture.deinit();
 }
 
 void RenderSystem::reset() noexcept {
@@ -30,6 +33,8 @@ void RenderSystem::reset() noexcept {
 }
 
 void RenderSystem::step(const float /*delta*/) noexcept {
+
+	m_draw->drawTexture(m_test_room_texture, glm::vec2(0,0), glm::vec2(config::CAMERA_VIEW_WIDTH/2.f,config::CAMERA_VIEW_HEIGHT/2.f));
 
 	// Draw Player
 	glm::vec2 player_pos = m_registry->ecs.get<Position>(m_registry->player()).pos;        // Position of the texture
@@ -42,6 +47,7 @@ void RenderSystem::step(const float /*delta*/) noexcept {
 
 	m_draw->drawRect(player_pos+glm::vec2(0,player_size.y), player_pos+player_size,player_pos, player_pos+glm::vec2(player_size.x,0),color);
 
+	/*
     // Draw Plattform
     {
         for (entt::entity platform_entity: m_registry->ecs.view<Platform>()) {
@@ -64,6 +70,7 @@ void RenderSystem::step(const float /*delta*/) noexcept {
         	m_draw->fillRect(pos1, pos2, pos3, pos4, color, opacity);
 		}
 	}
+*/
 
 	// Draw Attack Hitboxes
 	{

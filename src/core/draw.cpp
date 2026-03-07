@@ -19,6 +19,14 @@ Draw *Draw::init(Window* window, Registry* registry) noexcept {
     self->m_registry->m_viewport.m_origin = glm::uvec2(0);
     self->m_registry->m_viewport.m_size = self->m_window->windowExtent();
 
+    glGenVertexArrays(1, &self->m_quad_vao);
+    glBindVertexArray(self->m_quad_vao);
+    glGenBuffers(1, &self->m_quad_ebo);
+
+    constexpr std::array<GLuint, 6> indices = { 0, 1, 2, 2, 3, 0 };
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self->m_quad_ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_STATIC_DRAW);
+
      // load resources for rendering
     self->m_player_mesh = Mesh::init(assets::Mesh::player).value();
 
@@ -27,6 +35,7 @@ Draw *Draw::init(Window* window, Registry* registry) noexcept {
 	self->m_polygon_shader = Shader::init(assets::Shader::polygon).value();
 	self->m_platform_shader=Shader::init(assets::Shader::platform).value();
 	self->m_text_shader = Shader::init(assets::Shader::text).value();
+    self->m_sprite_shader = Shader::init(assets::Shader::sprite).value();
 
 	// line VAO/VBO
     glGenVertexArrays(1, &self->m_line_vao);
@@ -136,8 +145,8 @@ void Draw::deinit() noexcept {
     m_platform_shader.deinit();
     m_circle_shader.deinit();
     m_text_shader.deinit();
+    m_sprite_shader.deinit();
     m_intermediate_framebuffer.deinit();
-
 }
 
 void Draw::start() noexcept {
@@ -394,6 +403,25 @@ void Draw::drawArrow(glm::vec2 start_point, glm::vec2 end_point, glm::vec3 color
         color, 1.f);
 }
 
+
+void Draw::drawTexture(Texture& texture, glm::vec2 position, glm::vec2 scale) noexcept {
+    position += scale;
+    glBindVertexArray(m_quad_vao);
+    Shader& sprite_shader = m_sprite_shader;
+    sprite_shader.use()
+    .setMat4("view", view)
+    .setMat4("projection", projection)
+    .setSampler("sprite", 0)
+    .setVec3("fcolor", {1,1,1});
+
+    glm::mat4 model = glm::identity<glm::mat4>();
+    model = glm::translate(model, glm::vec3(position, 0));
+    model = glm::scale(model, glm::vec3(scale, 1));
+
+    texture.bind(0);
+    sprite_shader.setMat4("model[0]", model);
+    glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, 1);
+}
 
 
 glm::mat4 Draw::getViewMatrix() noexcept {

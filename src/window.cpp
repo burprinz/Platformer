@@ -20,8 +20,8 @@ std::optional<Window*> Window::init(const size_t width, const size_t height, con
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 #else
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 #endif
 	if (!(window = glfwCreateWindow(static_cast<int>(width), static_cast<int>(height), title,
 		nullptr, nullptr))) {

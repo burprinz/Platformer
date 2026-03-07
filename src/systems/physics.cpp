@@ -96,8 +96,6 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 	AttackState attack_state = m_registry->ecs.get<AttackState>(m_registry->player());
 	Player player = m_registry->ecs.get<Player>(m_registry->player());
 
-
-
 	for (entt::entity e : m_registry->hit_entities) {
 		if (!m_registry->ecs.get<Platform>(e).touchable) {
 			vel = {0, 0};
@@ -111,7 +109,6 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 	if (player_state.on_ground) {
 		player.lastSafePosition = pos;
 	}
-
 
 	// Ceck if player can pogo
 	if (attack_state.state == ATTACKING && player_state.in_air && attack_state.attack_dir == DOWN) {

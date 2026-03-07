@@ -43,7 +43,8 @@ template<> std::string assets::getAssetPath<assets::Shader>(const assets::Shader
 static constexpr std::array<const char*, static_cast<size_t>(assets::Texture::count)> TEXTURE_FILES = {
 	"mirror.png",
 	"door.png",
-	"LightEffects/player_animation.png"
+	"LightEffects/player_animation.png",
+	"rooms/TestRoom.png"
 };
 
 template<> std::string assets::getAssetPath<assets::Texture>(const assets::Texture asset_id) noexcept {
