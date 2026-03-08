@@ -166,6 +166,8 @@ public:
 
     std::vector<entt::entity> hit_entities;
 
+    glm::vec2 camera_pos = {0,0};
+
 private:
 
     entt::entity m_player;

@@ -60,11 +60,13 @@ std::optional<Application> Application::init(const CommandLineOptions& options) 
 	self.m_registry = Registry::init();
 	self.m_draw = Draw::init(self.m_window, self.m_registry);
 
+
 	self.m_world = WorldSystem::init(self.m_window, self.m_registry, self.m_audio_engine);
 	self.m_combat = CombatSystem::init(self.m_window, self.m_registry);
 	self.m_physics = PhysicsSystem::init(self.m_window, self.m_registry, self.m_audio_engine);
 	self.m_particles = ParticleSystem::init(self.m_window, self.m_registry);
 	self.m_render = RenderSystem::init(self.m_window, self.m_registry, self.m_particles, self.m_draw);
+	self.m_background = BackgroundSystem::init(self.m_window, self.m_registry, self.m_draw);
 	self.m_camera = CameraSystem::init(self.m_registry);
 
 	return self;
@@ -130,6 +132,7 @@ void Application::run() noexcept {
 		m_camera.step(delta_time);
 
 		m_draw->start();
+		m_background.step(delta_time);
 		m_render.step(delta_time);
 		m_draw->finish();
 

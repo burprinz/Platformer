@@ -42,6 +42,7 @@ void CombatSystem::handlePlayerAttacks(const float delta) {
             float mouse_angle = m_window->calcRelativeMouseAngleInDeg(player_midpoint);
             glm::vec2 hit_pos;
             Direction hit_dir;
+
             if (mouse_angle >= 45 && mouse_angle < 135) {
                 // UNTEN
                 if (mob_state.on_ground) return;

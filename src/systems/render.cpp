@@ -40,12 +40,12 @@ void RenderSystem::step(const float /*delta*/) noexcept {
 	glm::vec2 player_pos = m_registry->ecs.get<Position>(m_registry->player()).pos;        // Position of the texture
 	glm::vec2 player_size = m_registry->ecs.get<Dimension>(m_registry->player()).dim;
 	MobState player_state = m_registry->ecs.get<MobState>(m_registry->player());
-	glm::vec3 color = {0, 1, 0};
+	glm::vec3 color = {0, 0, 0};
 	if (player_state.climbing) {
-		color = {0, 0, 1};
+		color = {0, 0, 0};
 	}
 
-	m_draw->drawRect(player_pos+glm::vec2(0,player_size.y), player_pos+player_size,player_pos, player_pos+glm::vec2(player_size.x,0),color);
+	m_draw->fillRect(player_pos+glm::vec2(0,player_size.y), player_pos+player_size,player_pos, player_pos+glm::vec2(player_size.x,0),color, 1.f);
 
 	/*
     // Draw Plattform

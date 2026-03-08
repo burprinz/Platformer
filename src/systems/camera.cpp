@@ -1,6 +1,7 @@
 #include "camera.h"
 
 #include <algorithm>
+#include <iostream>
 
 #include "config.h"
 
@@ -37,21 +38,21 @@ void CameraSystem::step(const float delta) {
     //Visable Rectangle in World Coordinates.
     float left   = cam.center.x - half.x;
     float right  = cam.center.x + half.x;
-    float bottom = cam.center.y - half.y;
-    float top    = cam.center.y + half.y;
+    //float bottom = cam.center.y - half.y;
+    //float top    = cam.center.y + half.y;
 
     // Concept of deadzone for improved Camera Movement. https://medium.com/codex/make-your-godot-2d-camera-follow-your-player-66395e7af6ef
     float dzLeft   = left   + cam.bufferLeft   * cam.viewSize.x;
     float dzRight  = right  - cam.bufferRight  * cam.viewSize.x;
-    float dzBottom = bottom + cam.bufferBottom * cam.viewSize.y;
-    float dzTop    = top    - cam.bufferTop    * cam.viewSize.y;
+    //float dzBottom = bottom + cam.bufferBottom * cam.viewSize.y;
+    //float dzTop    = top    - cam.bufferTop    * cam.viewSize.y;
 
     glm::vec2 targetCenter = cam.center;
 
     if (player_pos.x < dzLeft)  targetCenter.x -= (dzLeft - player_pos.x);
     if (player_pos.x > dzRight) targetCenter.x += (player_pos.x - dzRight);
-    if (player_pos.y < dzBottom) targetCenter.y -= (dzBottom - player_pos.y);
-    if (player_pos.y > dzTop)    targetCenter.y += (player_pos.y - dzTop);
+    //if (player_pos.y < dzBottom) targetCenter.y -= (dzBottom - player_pos.y);
+    //if (player_pos.y > dzTop)    targetCenter.y += (player_pos.y - dzTop);
 
     // Ensuring View stays in World
     float minCx = cam.worldMin.x + half.x;
@@ -64,6 +65,8 @@ void CameraSystem::step(const float delta) {
 
 	float alpha = 1.0f - std::exp(-CAMERA_SMOOTHING_FACTOR * delta);
 	cam.center = glm::mix(cam.center, targetCenter, alpha);
+
+    m_registry->camera_pos = cam.center;
 }
 
 void CameraSystem::reset() noexcept {}

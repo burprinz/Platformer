@@ -44,7 +44,16 @@ static constexpr std::array<const char*, static_cast<size_t>(assets::Texture::co
 	"mirror.png",
 	"door.png",
 	"LightEffects/player_animation.png",
-	"rooms/TestRoom.png"
+	"rooms/TestRoom.png",
+	"backgrounds/test/1.png",
+	"backgrounds/test/2.png",
+	"backgrounds/test/3fx.png",
+	"backgrounds/test/4.png",
+	"backgrounds/test/5.png",
+	"backgrounds/test/6fx.png",
+	"backgrounds/test/7.png",
+	"backgrounds/test/8fx.png",
+	"backgrounds/test/9.png"
 };
 
 template<> std::string assets::getAssetPath<assets::Texture>(const assets::Texture asset_id) noexcept {

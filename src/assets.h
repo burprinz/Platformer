@@ -41,6 +41,15 @@ enum struct Texture {
 	door,
 	player_animation,
 	test_room,
+	background_1,
+	background_2,
+	background_3,
+	background_4,
+	background_5,
+	background_6,
+	background_7,
+	background_8,
+	background_9,
 	count
 };
 
