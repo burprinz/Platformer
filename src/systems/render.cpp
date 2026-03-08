@@ -20,6 +20,18 @@ RenderSystem RenderSystem::init(Window *window, Registry *registry, ParticleSyst
 	self.m_draw = draw;
 
 	self.m_test_room_texture = Texture::init(assets::Texture::test_room);
+	self.player_idle_texture = Texture::init(assets::Texture::idle);
+
+	self.player_walking_left_texture = Texture::init(assets::Texture::walking_left);
+	self.player_walking_right_texture = Texture::init(assets::Texture::walking_right);
+	self.player_falling_left_texture = Texture::init(assets::Texture::falling_left);
+	self.player_falling_right_texture = Texture::init(assets::Texture::falling_right);
+	self.player_climbing_left_texture = Texture::init(assets::Texture::climbing_left);
+	self.player_climbing_right_texture = Texture::init(assets::Texture::climbing_right);
+	self.player_striking_left_texture = Texture::init(assets::Texture::striking_left);
+	self.player_striking_right_texture = Texture::init(assets::Texture::striking_right);
+	self.player_striking_up_texture = Texture::init(assets::Texture::striking_up);
+	self.player_striking_down_texture = Texture::init(assets::Texture::striking_down);
 
     return self;
 }
@@ -39,13 +51,45 @@ void RenderSystem::step(const float /*delta*/) noexcept {
 	// Draw Player
 	glm::vec2 player_pos = m_registry->ecs.get<Position>(m_registry->player()).pos;        // Position of the texture
 	glm::vec2 player_size = m_registry->ecs.get<Dimension>(m_registry->player()).dim;
+	glm::vec2 player_vel = m_registry->ecs.get<Velocity>(m_registry->player()).vel;
 	MobState player_state = m_registry->ecs.get<MobState>(m_registry->player());
+	AttackState attack_state = m_registry->ecs.get<AttackState>(m_registry->player());
 	glm::vec3 color = {0, 0, 0};
 	if (player_state.climbing) {
 		color = {0, 0, 0};
 	}
 
-	m_draw->fillRect(player_pos+glm::vec2(0,player_size.y), player_pos+player_size,player_pos, player_pos+glm::vec2(player_size.x,0),color, 1.f);
+	glm::vec2 texture_pos = player_pos - glm::vec2(0.06387890625f, 0.f);
+	Texture current_player_texture = player_idle_texture;
+	if (attack_state.state == ATTACKING) {
+		switch (attack_state.attack_dir) {
+			case UP:
+				current_player_texture = player_striking_up_texture;
+				break;
+			case DOWN:
+				current_player_texture = player_striking_down_texture;
+				break;
+			case LEFT:
+				current_player_texture = player_striking_left_texture;
+				break;
+			case RIGHT:
+				current_player_texture = player_striking_right_texture;
+				break;
+		}
+	} else {
+		if (player_state.in_air) {
+			if (player_vel.x < 0) current_player_texture = player_falling_left_texture;
+			else if (player_vel.x > 0) current_player_texture = player_falling_right_texture;
+		} else if (player_state.climbing) {
+			if (player_state.on_left_wall) current_player_texture = player_climbing_left_texture;
+			else if (player_state.on_right_wall) current_player_texture = player_climbing_right_texture;
+		} else {
+			if (player_vel.x < 0) current_player_texture = player_walking_left_texture;
+			else if (player_vel.x > 0) current_player_texture = player_walking_right_texture;
+		}
+	}
+	m_draw->drawTexture(current_player_texture, texture_pos, glm::vec2(0.1277578125f, 0.1277578125f));
+	m_draw->drawRect(player_pos+glm::vec2(0,player_size.y), player_pos+player_size,player_pos, player_pos+glm::vec2(player_size.x,0),color);
 
 	/*
     // Draw Plattform

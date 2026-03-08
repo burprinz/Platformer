@@ -28,5 +28,18 @@ class RenderSystem {
 		Draw* m_draw;
 
 
+		Texture player_idle_texture;
+
+		Texture player_walking_left_texture;
+		Texture player_walking_right_texture;
+		Texture player_falling_left_texture;
+		Texture player_falling_right_texture;
+		Texture player_climbing_left_texture;
+		Texture player_climbing_right_texture;
+		Texture player_striking_left_texture;
+		Texture player_striking_right_texture;
+		Texture player_striking_up_texture;
+		Texture player_striking_down_texture;
+
 		Texture m_test_room_texture;
 };

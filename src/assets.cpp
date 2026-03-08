@@ -53,8 +53,21 @@ static constexpr std::array<const char*, static_cast<size_t>(assets::Texture::co
 	"backgrounds/test/6fx.png",
 	"backgrounds/test/7.png",
 	"backgrounds/test/8fx.png",
-	"backgrounds/test/9.png"
+	"backgrounds/test/9.png",
+	"character/player_test/idle.png",
+"character/player_test/walking_left.png",
+"character/player_test/walking_right.png",
+"character/player_test/falling_left.png",
+"character/player_test/falling_right.png",
+"character/player_test/climbing_left.png",
+"character/player_test/climbing_right.png",
+"character/player_test/striking_left.png",
+"character/player_test/striking_right.png",
+"character/player_test/striking_up.png",
+"character/player_test/striking_down.png"
 };
+
+
 
 template<> std::string assets::getAssetPath<assets::Texture>(const assets::Texture asset_id) noexcept {
 	return getBasePath() + "/assets/textures/" + TEXTURE_FILES[static_cast<size_t>(asset_id)];

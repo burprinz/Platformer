@@ -37,21 +37,33 @@ enum struct Shader {
 };
 
 enum struct Texture {
-	mirror,
-	door,
-	player_animation,
-	test_room,
-	background_1,
-	background_2,
-	background_3,
-	background_4,
-	background_5,
-	background_6,
-	background_7,
-	background_8,
-	background_9,
-	count
+		mirror,
+		door,
+		player_animation,
+		test_room,
+		background_1,
+		background_2,
+		background_3,
+		background_4,
+		background_5,
+		background_6,
+		background_7,
+		background_8,
+		background_9,
+	idle,
+walking_left,
+walking_right,
+falling_left,
+falling_right,
+climbing_left,
+climbing_right,
+striking_left,
+striking_right,
+striking_up,
+striking_down,
+		count
 };
+
 
 template<typename AssetType>
 std::string getAssetPath(const AssetType asset_id) noexcept;
