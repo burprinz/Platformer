@@ -83,8 +83,9 @@ struct Rect {
 };
 
 struct Platform {
-    bool can_climb = true;
+    bool can_climb = false;
     bool touchable = true;
+    bool can_pogo = false;
 };
 
 

@@ -3,9 +3,6 @@
 #include <core/registry.h>
 #include <window.h>
 
-
-
-#include "particle.h"
 #include "core/draw.h"
 
 
@@ -14,7 +11,7 @@ class RenderSystem {
 		RenderSystem() = default;
 		~RenderSystem() = default;
 
-		static RenderSystem init(Window* window, Registry* registry, ParticleSystem* particles, Draw* m_draw) noexcept;
+		static RenderSystem init(Window* window, Registry* registry, Draw* m_draw) noexcept;
 		void deinit() noexcept;
 		void step(const float delta) noexcept;
 		void reset() noexcept;
@@ -24,7 +21,6 @@ class RenderSystem {
 	private:
 		Registry* m_registry;
 		Window* m_window;
-		ParticleSystem* m_particles;
 		Draw* m_draw;
 
 

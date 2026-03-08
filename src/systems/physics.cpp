@@ -83,10 +83,10 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 
 	// Key input (A,D)
 	if (m_registry->keys["d"]) {
-		vel.x += 0.1;
+		vel.x += delta*3.f;
 		if (vel.x > speed) vel.x = speed;
 	} else if (m_registry->keys["a"]) {
-		vel.x -= 0.1;
+		vel.x -= delta*3.f;
 		if (vel.x < -speed) vel.x = -speed;
 	} else {
 		vel.x = 0;
@@ -96,6 +96,7 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 	AttackState attack_state = m_registry->ecs.get<AttackState>(m_registry->player());
 	Player player = m_registry->ecs.get<Player>(m_registry->player());
 
+	// Player is on "spike"-platform
 	for (entt::entity e : m_registry->hit_entities) {
 		if (!m_registry->ecs.get<Platform>(e).touchable) {
 			vel = {0, 0};
@@ -106,6 +107,7 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 	}
 	m_registry->hit_entities.clear();
 
+	// Update last safe position if current pos is safe
 	if (player_state.on_ground) {
 		player.lastSafePosition = pos;
 	}
@@ -115,10 +117,11 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 		Rect attack_hitbox = attack_state.attack_box;
 		attack_hitbox.pos += pos;
 		for (entt::entity platform_id : m_registry->ecs.view<Platform>()) {
+			Platform platform = m_registry->ecs.get<Platform>(platform_id);
 			Rect platform_hitbox = Rect(m_registry->ecs.get<Position>(platform_id).pos, m_registry->ecs.get<Dimension>(platform_id).dim);
-			if (isFullyAboveRect(pos, platform_hitbox) && rectCollision(attack_hitbox, platform_hitbox)) {
+			if (platform.can_pogo && isFullyAboveRect(pos, platform_hitbox) && rectCollision(attack_hitbox, platform_hitbox)) {
 				player_state.can_double_jump = true;
-				vel.y = 1.8f;
+				vel.y = JUMP_HEIGHT;
 			}
 		}
 	}
@@ -129,17 +132,14 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 		)
 		&& m_registry->keys["space"]) {
 
-		vel.y = 1.8f;
+		vel.y = JUMP_HEIGHT;
 		if (player_state.climbing) {
 			if (player_state.on_left_wall) {
-				vel.x = speed*1.5;
-				vel.y = 2.0f;
+				vel.x = speed;
 			} else if (player_state.on_right_wall) {
-				vel.x = -speed*1.5;
-				vel.y = 2.0f;
+				vel.x = -speed;
 			}
 		} else if (player_state.in_air) {
-			vel.y = 2.0f;
 			player_state.can_double_jump = false;
 		}
 		m_registry->keys["space"] = false;
@@ -148,10 +148,9 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 		if (player_state.climbing) {
 			vel.y = 0;
 		} else {
-			vel.y -= 9.81 * delta;
+			vel.y -= GRAVITY * delta;
 			if (vel.y < -3.f) vel.y = -3.f;
 		}
-
 	}
 
 	m_registry->ecs.replace<MobState>(m_registry->player(), player_state);

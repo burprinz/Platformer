@@ -64,8 +64,7 @@ std::optional<Application> Application::init(const CommandLineOptions& options) 
 	self.m_world = WorldSystem::init(self.m_window, self.m_registry, self.m_audio_engine);
 	self.m_combat = CombatSystem::init(self.m_window, self.m_registry);
 	self.m_physics = PhysicsSystem::init(self.m_window, self.m_registry, self.m_audio_engine);
-	self.m_particles = ParticleSystem::init(self.m_window, self.m_registry);
-	self.m_render = RenderSystem::init(self.m_window, self.m_registry, self.m_particles, self.m_draw);
+	self.m_render = RenderSystem::init(self.m_window, self.m_registry, self.m_draw);
 	self.m_background = BackgroundSystem::init(self.m_window, self.m_registry, self.m_draw);
 	self.m_camera = CameraSystem::init(self.m_registry);
 
@@ -77,7 +76,6 @@ void Application::deinit() noexcept {
 	m_physics.deinit();
 	m_render.deinit();
 	m_audio_engine->deinit();
-	m_particles->deinit();
 
 	m_draw->deinit();
 
@@ -127,7 +125,6 @@ void Application::run() noexcept {
 			m_physics.step(config::PHYSICS_TIME_STEP);
 			physics_accumulator -= config::PHYSICS_TIME_STEP;
 		}
-		m_particles->step(delta_time);
 
 		m_camera.step(delta_time);
 
@@ -164,7 +161,6 @@ void Application::reset() noexcept {
 	m_physics.reset();
 	m_render.reset();
 	m_camera.reset();
-	m_particles->reset();
 }
 
 void Application::onKeyCallback(GLFWwindow* /*window*/, int key, int /*scancode*/, int action, int /*mods*/) noexcept {

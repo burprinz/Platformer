@@ -31,12 +31,12 @@ void WorldSystem::reset() noexcept {
     m_reset = false;
 
     entt::entity platform = m_registry->ecs.create();
-    m_registry->ecs.emplace<Platform>(platform, false, true);
+    m_registry->ecs.emplace<Platform>(platform);
     m_registry->ecs.emplace<Position>(platform, glm::vec2(0.0f, 0.0f));
     m_registry->ecs.emplace<Dimension>(platform, glm::vec2(2.0f, 0.1f));
 
     platform = m_registry->ecs.create();
-    m_registry->ecs.emplace<Platform>(platform);
+    m_registry->ecs.emplace<Platform>(platform, true, true, false);
     m_registry->ecs.emplace<Position>(platform, glm::vec2(0.0f, 0.1f));
     m_registry->ecs.emplace<Dimension>(platform, glm::vec2(0.1f, 2.0f));
 
@@ -51,7 +51,7 @@ void WorldSystem::reset() noexcept {
     m_registry->ecs.emplace<Dimension>(platform, glm::vec2(0.4f, 0.1f));
 
     platform = m_registry->ecs.create();
-    m_registry->ecs.emplace<Platform>(platform, false, false);
+    m_registry->ecs.emplace<Platform>(platform, false, false, true);
     m_registry->ecs.emplace<Position>(platform, glm::vec2(1.4f, 0.8f));
     m_registry->ecs.emplace<Dimension>(platform, glm::vec2(0.4f, 0.1f));
 

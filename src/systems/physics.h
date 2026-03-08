@@ -5,12 +5,8 @@
 
 #include "window.h"
 
-struct LightBeamCollision
-{
-	glm::vec2 collision_point;
-	glm::vec2 collided_line_direction;
-	bool player_inside_polygon = false;
-};
+constexpr float JUMP_HEIGHT = 1.2f;
+constexpr float GRAVITY = 3.5f;
 
 class PhysicsSystem {
 	public:

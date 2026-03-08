@@ -11,12 +11,11 @@ constexpr float SHADOW_EXTEND_DISTANCE = 100.0f;  // distance of shadow cast
 
 
 
-RenderSystem RenderSystem::init(Window *window, Registry *registry, ParticleSystem* particles, Draw* draw) noexcept {
+RenderSystem RenderSystem::init(Window *window, Registry *registry, Draw* draw) noexcept {
     RenderSystem self;
 
     self.m_window = window;
     self.m_registry = registry;
-	self.m_particles = particles;
 	self.m_draw = draw;
 
 	self.m_test_room_texture = Texture::init(assets::Texture::test_room);

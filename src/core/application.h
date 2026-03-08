@@ -8,7 +8,6 @@
 #include <./window.h>
 
 #include "draw.h"
-#include "../systems/particle.h"
 #include "systems/background.h"
 #include "systems/combat.h"
 
@@ -27,7 +26,6 @@ class Application {
 
 		AudioSystem* m_audio_engine;
 		CameraSystem m_camera;
-		ParticleSystem* m_particles;
 
 		WorldSystem m_world;
 		PhysicsSystem m_physics;

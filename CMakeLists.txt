@@ -133,9 +133,7 @@ add_executable(${PROJECT_NAME}
 	${PROJECT_SOURCE_DIR}/src/utils/texture.cpp
 		src/systems/camera.cpp
 		src/systems/camera.h
-		src/systems/particle.cpp
-		src/systems/particle.h
-		src/core/util.h
+        src/core/util.h
 		src/core/draw.cpp
 		src/core/draw.h
 		src/systems/combat.cpp
