@@ -21,6 +21,7 @@ CameraSystem CameraSystem::init(Registry* registry) noexcept {
 
     //Starts Camera in the center of the Screen since Player will not be created yet.
     cam.center = 0.5f * cam.viewSize;
+    self.m_registry->camera_origin = cam.center;
 
     // PLACEHOLDER, this should be either calculated by objects or read in through
     cam.worldMin = { 0.f, 0.f };

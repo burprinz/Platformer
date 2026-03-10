@@ -57,6 +57,8 @@ std::optional<Application> Application::init(const CommandLineOptions& options) 
 	self.m_audio_engine = new AudioSystem;
 	*self.m_audio_engine = AudioSystem::init();
 
+	self.m_discord = Discord::init();
+	self.m_discord.update();
 	self.m_registry = Registry::init();
 	self.m_draw = Draw::init(self.m_window, self.m_registry);
 

@@ -7,6 +7,7 @@
 
 #include <./window.h>
 
+#include "discord.h"
 #include "draw.h"
 #include "systems/background.h"
 #include "systems/combat.h"
@@ -36,6 +37,7 @@ class Application {
 
 		Draw* m_draw;
 		Registry* m_registry;
+		Discord m_discord;
 
 		void reset() noexcept;
 

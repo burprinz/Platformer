@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+#include "utils/geometry.h"
+
 
 constexpr int LIGHT_EFFECT_FRAMECOUNT = 32;          // number of frames in light effect texture
 constexpr float LIGHT_EFFECT_ANIMATION_SPEED = 0.1f;        // time (in seconds) per frame
@@ -131,5 +133,16 @@ void RenderSystem::step(const float /*delta*/) noexcept {
 				m_draw->drawRect(pos1, pos2, pos3, pos4, color);
 			}
 		}
+	}
+
+
+	for (entt::entity polygon_entity : m_registry->ecs.view<PolygonShape>()) {
+		PolygonShape poly = m_registry->ecs.get<PolygonShape>(polygon_entity);
+		glm::vec2 pos = m_registry->ecs.get<Position>(polygon_entity).pos;
+
+		glm::vec3 col = {1,0,0};
+		if (rectanglePolygonCollision(Rect(player_pos, player_size), poly)) col = {0,1,0};
+
+		m_draw->fillPolygon(pos, glm::vec2{1,1}, poly, col);
 	}
 }

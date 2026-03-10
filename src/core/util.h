@@ -35,3 +35,10 @@ inline bool rectCollision(const Rect& r1, const Rect& r2) {
 inline bool isFullyAboveRect(const glm::vec2 pos, const Rect& belowRect) {
     return pos.y > belowRect.pos.y + belowRect.size.y;
 }
+
+inline PolygonShape createConvexPolygon(std::vector<glm::vec2> points) {
+    PolygonShape shape;
+    shape.vertices = points;
+
+    return shape;
+}

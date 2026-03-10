@@ -46,16 +46,6 @@ struct Scale {
     glm::vec2 scale;
 };
 
-struct BoundingBox {
-    glm::vec2 min;
-    glm::vec2 max;
-};
-
-struct PolygonShape {
-    std::vector<glm::vec2> vertices;
-    std::vector<int> triangle_indices;   // Triangulated indices (3 ints per triangle)
-    BoundingBox bounding_box;       // Axis-aligned bounding box
-};
 
 
 
@@ -82,12 +72,26 @@ struct Rect {
     glm::vec2 size;
 };
 
+struct BoundingBox {
+    glm::vec2 min;
+    glm::vec2 max;
+};
+
+struct PolygonShape {
+    std::vector<glm::vec2> vertices;
+    std::vector<int> triangle_indices;   // Triangulated indices (3 ints per triangle)
+    BoundingBox bounding_box;       // Axis-aligned bounding box
+};
+
 struct Platform {
     bool can_climb = false;
     bool touchable = true;
     bool can_pogo = false;
 };
 
+struct Spike {
+
+};
 
 /**
  * Combat
@@ -167,6 +171,7 @@ public:
 
     std::vector<entt::entity> hit_entities;
 
+    glm::vec2 camera_origin;
     glm::vec2 camera_pos = {0,0};
 
 private:

@@ -35,9 +35,9 @@ void CombatSystem::handlePlayerAttacks(const float delta) {
     } else if (attack_state.state == IDLE) {
 
         if (m_registry->keys["mouse_left"]) {
-            glm::vec2 player_pos = m_registry->ecs.get<Position>(player_id).pos;
+            glm::vec2 player_screen_pos = m_registry->ecs.get<Position>(player_id).pos - (m_registry->camera_pos - m_registry->camera_origin);
             glm::vec2 player_size = m_registry->ecs.get<Dimension>(player_id).dim;
-            glm::vec2 player_midpoint = player_pos + player_size * 0.5f;
+            glm::vec2 player_midpoint = player_screen_pos + player_size * 0.5f;
 
             float mouse_angle = m_window->calcRelativeMouseAngleInDeg(player_midpoint);
             glm::vec2 hit_pos;

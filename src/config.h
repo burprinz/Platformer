@@ -19,4 +19,5 @@ namespace config {
     constexpr float INF = std::numeric_limits<float>::infinity();
     constexpr float EPSILON = 0.0001f;
 	constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
+	constexpr float FLOAT_MIN = std::numeric_limits<float>::min();
 }

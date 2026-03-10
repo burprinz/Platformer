@@ -96,7 +96,16 @@ FetchContent_Declare(
 		GIT_PROGRESS TRUE
 		EXCLUDE_FROM_ALL
 )
-FetchContent_MakeAvailable(glfw glm miniaudio gl3w entt freetype fmt tinyobj stb json)
+
+# Discord
+FetchContent_Declare(
+		discord-rpc
+		GIT_REPOSITORY https://github.com/discord/discord-rpc.git
+		GIT_TAG        v3.4.0 # Latest stable release
+		GIT_SHALLOW    TRUE
+)
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+FetchContent_MakeAvailable(glfw glm miniaudio gl3w entt freetype fmt tinyobj stb json discord-rpc)
 
 
 # Configure compiler flags as an interface library
@@ -140,6 +149,9 @@ add_executable(${PROJECT_NAME}
 		src/systems/combat.h
 		src/systems/background.cpp
 		src/systems/background.h
+		src/utils/geometry.h
+		src/discord.cpp
+		src/discord.h
 )
 
 
@@ -158,5 +170,5 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-	compiler_flags glfw glm::glm miniaudio tinyobjloader gl3w fmt nlohmann_json::nlohmann_json freetype EnTT::EnTT
+	compiler_flags glfw glm::glm miniaudio tinyobjloader gl3w fmt nlohmann_json::nlohmann_json freetype EnTT::EnTT discord-rpc
 )

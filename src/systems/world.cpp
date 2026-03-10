@@ -2,6 +2,7 @@
 #include "world.h"
 
 #include "common.h"
+#include "utils/geometry.h"
 
 struct PlatformDef {
     glm::vec2 pos;
@@ -59,6 +60,12 @@ void WorldSystem::reset() noexcept {
     m_registry->ecs.emplace<Platform>(platform);
     m_registry->ecs.emplace<Position>(platform, glm::vec2(0.7f, 1.35f));
     m_registry->ecs.emplace<Dimension>(platform, glm::vec2(0.3f, 0.1f));
+
+
+    entt::entity polygon = m_registry->ecs.create();
+    PolygonShape poly = createPolygon({glm::vec2(0,0), glm::vec2(0,1), glm::vec2(1,0)});
+    m_registry->ecs.emplace<PolygonShape>(polygon, poly);
+    m_registry->ecs.emplace<Position>(polygon, glm::vec2(0.0f, 0.0f));
 
 }
 
