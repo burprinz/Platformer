@@ -84,10 +84,10 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 
 	// Key input (A,D)
 	if (m_registry->keys["d"]) {
-		vel.x += delta*3.f;
+		vel.x += delta*14;
 		if (vel.x > speed) vel.x = speed;
 	} else if (m_registry->keys["a"]) {
-		vel.x -= delta*3.f;
+		vel.x -= delta*14;
 		if (vel.x < -speed) vel.x = -speed;
 	} else {
 		vel.x = 0;
@@ -162,7 +162,7 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 			vel.y = 0;
 		} else {
 			vel.y -= GRAVITY * delta;
-			if (vel.y < -3.f) vel.y = -3.f;
+			if (vel.y < -13.f) vel.y = -13.f;
 		}
 	}
 

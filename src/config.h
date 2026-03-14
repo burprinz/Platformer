@@ -7,8 +7,8 @@ namespace config {
 	constexpr int MAX_BEAM = 32;
     
     // Renamed Camera View from window.h
-    constexpr float CAMERA_VIEW_WIDTH  = 3.555f; //Formerly WINDOW_X_EXTENT
-    constexpr float CAMERA_VIEW_HEIGHT = 2.f; //Formerly WINDOW_Y_EXTENT
+    constexpr float CAMERA_VIEW_WIDTH  = 16.f; //Formerly WINDOW_X_EXTENT
+    constexpr float CAMERA_VIEW_HEIGHT = 9.f; //Formerly WINDOW_Y_EXTENT
     constexpr float SCREEN_DARKNESS = 1; // Default screen darkness
 	constexpr float PHYSICS_TIME_STEP = 1.f / 60.f; // Physics time step for fixed update loop
 

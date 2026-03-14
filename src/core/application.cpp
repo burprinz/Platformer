@@ -155,7 +155,7 @@ void Application::reset() noexcept {
 	m_registry->ecs.emplace<Velocity>(player_id, glm::vec2(0.f, 0.f));
 	m_registry->ecs.emplace<Scale>(player_id, glm::vec2(-0.1f, 0.1f));
 	m_registry->ecs.emplace<Radius>(player_id, 0.1f);
-	m_registry->ecs.emplace<Dimension>(player_id, glm::vec2(0.1, 0.17));
+	m_registry->ecs.emplace<Dimension>(player_id, glm::vec2(0.45, 0.765));
 	m_registry->ecs.emplace<MobState>(player_id);
 	m_registry->ecs.emplace<AttackState>(player_id);
 

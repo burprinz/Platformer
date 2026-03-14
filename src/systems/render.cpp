@@ -66,7 +66,6 @@ void RenderSystem::step(const float /*delta*/) noexcept {
 		color = {0, 0, 0};
 	}
 
-	glm::vec2 texture_pos = player_pos - glm::vec2(0.06387890625f, 0.f);
 	Texture current_player_texture = player_idle_texture;
 	if (attack_state.state == ATTACKING) {
 		switch (attack_state.attack_dir) {
@@ -95,9 +94,26 @@ void RenderSystem::step(const float /*delta*/) noexcept {
 			else if (player_vel.x > 0) current_player_texture = player_walking_right_texture;
 		}
 	}
-	m_draw->drawTexture(current_player_texture, texture_pos, glm::vec2(0.1277578125f, 0.1277578125f));
+	//m_draw->drawTexture(current_player_texture, player_pos, glm::vec2(player_size.x, player_size.y));
 	m_draw->drawRect(player_pos+glm::vec2(0,player_size.y), player_pos+player_size,player_pos, player_pos+glm::vec2(player_size.x,0),color);
 
+	// Draw Attack Hitboxes
+	{
+		for (entt::entity attack_state_entity : m_registry->ecs.view<AttackState>()) {
+			AttackState state = m_registry->ecs.get<AttackState>(attack_state_entity);
+			//std::cout<<state.state<<std::endl;
+			if (state.state == ATTACKING) {
+				glm::vec2 entity_pos = m_registry->ecs.get<Position>(attack_state_entity).pos;
+				Rect bbox = state.attack_box;
+				glm::vec2 pos1 = entity_pos + bbox.pos;
+				glm::vec2 pos2 = pos1 + glm::vec2{0, bbox.size.y};
+				glm::vec2 pos3 = pos1 + glm::vec2{bbox.size.x, 0};
+				glm::vec2 pos4 = pos3 + glm::vec2{0, bbox.size.y};
+				color = glm::vec3{ 1.f, 0.f, 0.f };
+				m_draw->drawRect(pos1, pos2, pos3, pos4, color);
+			}
+		}
+	}
 
     // Draw Plattform
     {
@@ -123,30 +139,9 @@ void RenderSystem::step(const float /*delta*/) noexcept {
 	}
 
 
-	// Draw Attack Hitboxes
-	{
-		for (entt::entity attack_state_entity : m_registry->ecs.view<AttackState>()) {
-			AttackState state = m_registry->ecs.get<AttackState>(attack_state_entity);
-			//std::cout<<state.state<<std::endl;
-			if (state.state == ATTACKING) {
-				glm::vec2 entity_pos = m_registry->ecs.get<Position>(attack_state_entity).pos;
-				Rect bbox = state.attack_box;
-				glm::vec2 pos1 = entity_pos + bbox.pos;
-				glm::vec2 pos2 = pos1 + glm::vec2{0, bbox.size.y};
-				glm::vec2 pos3 = pos1 + glm::vec2{bbox.size.x, 0};
-				glm::vec2 pos4 = pos3 + glm::vec2{0, bbox.size.y};
-				color = glm::vec3{ 1.f, 0.f, 0.f };
-				m_draw->drawRect(pos1, pos2, pos3, pos4, color);
-			}
-		}
-	}
-
-
 	for (entt::entity polygon_entity : m_registry->ecs.view<PolygonShape>()) {
 		PolygonShape poly = m_registry->ecs.get<PolygonShape>(polygon_entity);
 		glm::vec2 pos = m_registry->ecs.get<Position>(polygon_entity).pos;
-
-		std::cout<<pos.x<<" "<<pos.y<<" "<<player_pos.x<<" "<<player_pos.y<<std::endl;
 
 		glm::vec3 col = {1,0,0};
 		if (rectanglePolygonCollision(Rect(player_pos, player_size), poly, pos)) col = {0,1,0};

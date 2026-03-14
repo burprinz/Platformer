@@ -5,8 +5,8 @@
 
 #include "window.h"
 
-constexpr float JUMP_HEIGHT = 1.2f;
-constexpr float GRAVITY = 3.5f;
+constexpr float JUMP_HEIGHT = 5.4f;
+constexpr float GRAVITY = 15.75f;
 
 class PhysicsSystem {
 	public:

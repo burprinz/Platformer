@@ -21,7 +21,7 @@ struct Viewport{
 };
 
 struct Player {
-    float velocity = .5f;
+    float velocity = 2.5f;
     float sprint_velocity = 1.f;
     float sneak_velocity = .2f;
 
