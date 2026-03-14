@@ -31,6 +31,7 @@ void WorldSystem::deinit() noexcept {
 void WorldSystem::reset() noexcept {
     m_reset = false;
 
+    /*
     entt::entity platform = m_registry->ecs.create();
     m_registry->ecs.emplace<Platform>(platform);
     m_registry->ecs.emplace<Position>(platform, glm::vec2(0.0f, 0.0f));
@@ -61,12 +62,11 @@ void WorldSystem::reset() noexcept {
     m_registry->ecs.emplace<Position>(platform, glm::vec2(0.7f, 1.35f));
     m_registry->ecs.emplace<Dimension>(platform, glm::vec2(0.3f, 0.1f));
 
-
     entt::entity polygon = m_registry->ecs.create();
-    PolygonShape poly = createPolygon({glm::vec2(0,0), glm::vec2(0,1), glm::vec2(1,0)});
+    PolygonShape poly = createPolygon({glm::vec2(0,0), glm::vec2(1,-0.5), glm::vec2(2,0.7), glm::vec2(1.5,1.3), glm::vec2(0.6,0.7)});
     m_registry->ecs.emplace<PolygonShape>(polygon, poly);
     m_registry->ecs.emplace<Position>(polygon, glm::vec2(0.0f, 0.0f));
-
+*/
 }
 
 

@@ -3,6 +3,8 @@
 #include <common.h>
 #include <entt/entt.hpp>
 
+#include "utils/texture.h"
+
 
 constexpr int IDLE = 0;
 constexpr int ATTACKING = 1;
@@ -120,6 +122,11 @@ struct CameraState {
 };
 
 
+struct RoomTexture {
+    glm::vec2 pos;
+    Texture texture;
+};
+
 
 
 struct Prism {
@@ -142,6 +149,7 @@ struct MirrorRotatable {
 struct MirrorIndicator {
     float opacity;
 };
+
 
 // NOTE: For your own project you may want to move the registry to a different file, as it grows in size.
 //	 Depending on the requirements of your projects it may also make sense to have multiple registries.

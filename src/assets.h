@@ -64,7 +64,6 @@ striking_down,
 		count
 };
 
-
 template<typename AssetType>
 std::string getAssetPath(const AssetType asset_id) noexcept;
 

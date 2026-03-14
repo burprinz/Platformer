@@ -11,6 +11,7 @@
 #include "draw.h"
 #include "systems/background.h"
 #include "systems/combat.h"
+#include "utils/entity_factory.h"
 
 
 class Application {
@@ -34,6 +35,8 @@ class Application {
 
 		RenderSystem m_render;
 		BackgroundSystem m_background;
+
+		EntityFactory m_entity_factory;
 
 		Draw* m_draw;
 		Registry* m_registry;

@@ -18,6 +18,7 @@ Texture Texture::init(const assets::Texture asset) noexcept {
 	return init(asset_path.c_str());
 }
 
+
 Texture Texture::init(const char* path) noexcept {
 	int w, h, c;
 	stbi_set_flip_vertically_on_load(true);

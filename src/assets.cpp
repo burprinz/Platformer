@@ -68,7 +68,6 @@ static constexpr std::array<const char*, static_cast<size_t>(assets::Texture::co
 };
 
 
-
 template<> std::string assets::getAssetPath<assets::Texture>(const assets::Texture asset_id) noexcept {
 	return getBasePath() + "/assets/textures/" + TEXTURE_FILES[static_cast<size_t>(asset_id)];
 }

@@ -62,6 +62,7 @@ std::optional<Application> Application::init(const CommandLineOptions& options) 
 	self.m_registry = Registry::init();
 	self.m_draw = Draw::init(self.m_window, self.m_registry);
 
+	self.m_entity_factory = EntityFactory::init(self.m_window, self.m_registry);
 
 	self.m_world = WorldSystem::init(self.m_window, self.m_registry, self.m_audio_engine);
 	self.m_combat = CombatSystem::init(self.m_window, self.m_registry);
@@ -157,6 +158,8 @@ void Application::reset() noexcept {
 	m_registry->ecs.emplace<Dimension>(player_id, glm::vec2(0.1, 0.17));
 	m_registry->ecs.emplace<MobState>(player_id);
 	m_registry->ecs.emplace<AttackState>(player_id);
+
+	m_entity_factory.createFromFile("test_room.json");
 
 	// reset systems
 	m_world.reset();

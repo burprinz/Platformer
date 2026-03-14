@@ -1,0 +1,33 @@
+PLATFORM
+    {
+      "id": 1,
+      "type": "Platform",
+      "position": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "size": {
+        "w": 12.0,
+        "h": 216.0
+      },
+      "can_climb": true,
+      "touchable": true,
+      "can_pogo": false
+    }
+
+
+POLYGON
+{
+      "id": 1,
+      "type": "Polygon",
+      "position": {
+        "x": 975.0,
+        "y": 60.0
+      },
+      "vertices": [
+        {
+          "x": 0,
+          "y": 0
+        }
+      ]
+    }

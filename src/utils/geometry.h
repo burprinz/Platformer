@@ -78,9 +78,9 @@ inline PolygonShape createPolygon(std::vector<glm::vec2> counter_clock_vertices)
     return shape;
 }
 
-inline Rect boundingBoxToRect(BoundingBox bbox) noexcept {
+inline Rect boundingBoxToRect(BoundingBox bbox, glm::vec2 pos) noexcept {
     Rect rect;
-    rect.pos = bbox.min;
+    rect.pos = bbox.min + pos;
     rect.size = bbox.max - bbox.min;
     return rect;
 }
@@ -92,8 +92,9 @@ inline bool rectangleRectangeCollision(Rect r1, Rect r2) {
         && r1.pos.y + r1.size.y > r2.pos.y;
 }
 
-inline bool rectanglePolygonCollision(Rect rect, PolygonShape poly) {
-    if (!rectangleRectangeCollision(rect, boundingBoxToRect(poly.bounding_box))) return false;
+
+inline bool rectanglePolygonCollision(Rect rect, PolygonShape poly, glm::vec2 poly_pos) {
+    if (!rectangleRectangeCollision(rect, boundingBoxToRect(poly.bounding_box, poly_pos))) return false;
 
     // Rect inside AABB
     glm::vec2 rectPoints[4] = {
@@ -104,8 +105,8 @@ inline bool rectanglePolygonCollision(Rect rect, PolygonShape poly) {
     };
 
     for (size_t i = 0; i < poly.vertices.size(); i++) {
-        glm::vec2 p1 = poly.vertices[i];
-        glm::vec2 p2 = poly.vertices[(i + 1) % poly.vertices.size()];
+        glm::vec2 p1 = poly.vertices[i] + poly_pos;
+        glm::vec2 p2 = poly.vertices[(i + 1) % poly.vertices.size()] + poly_pos;
         glm::vec2 edge = p2 - p1;
 
         // Normalize
@@ -123,7 +124,7 @@ inline bool rectanglePolygonCollision(Rect rect, PolygonShape poly) {
         }
 
         for (glm::vec2 point : poly.vertices) {
-            float projection = glm::dot(point, axis);
+            float projection = glm::dot(point + poly_pos, axis);
             if (projection < minP) minP = projection;
             if (projection > maxP) maxP = projection;
         }

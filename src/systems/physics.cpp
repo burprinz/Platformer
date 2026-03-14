@@ -7,6 +7,7 @@
 #include "core/util.h"
 #include "config.h"
 #include "world.h"
+#include "utils/geometry.h"
 
 
 PhysicsSystem PhysicsSystem::init(Window* window, Registry* registry, AudioSystem* audio_engine) noexcept {
@@ -116,12 +117,24 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 	if (attack_state.state == ATTACKING && player_state.in_air && attack_state.attack_dir == DOWN) {
 		Rect attack_hitbox = attack_state.attack_box;
 		attack_hitbox.pos += pos;
+		bool pogod = false;
 		for (entt::entity platform_id : m_registry->ecs.view<Platform>()) {
 			Platform platform = m_registry->ecs.get<Platform>(platform_id);
 			Rect platform_hitbox = Rect(m_registry->ecs.get<Position>(platform_id).pos, m_registry->ecs.get<Dimension>(platform_id).dim);
 			if (platform.can_pogo && isFullyAboveRect(pos, platform_hitbox) && rectCollision(attack_hitbox, platform_hitbox)) {
 				player_state.can_double_jump = true;
 				vel.y = JUMP_HEIGHT;
+				pogod = true;
+			}
+		}
+		if (!pogod) {
+			for (entt::entity polygon : m_registry->ecs.view<PolygonShape>()) {
+				PolygonShape shape = m_registry->ecs.get<PolygonShape>(polygon);
+				glm::vec2 position = m_registry->ecs.get<Position>(polygon).pos;
+				if (rectanglePolygonCollision(attack_hitbox, shape, position)) {
+					player_state.can_double_jump = true;
+					vel.y = JUMP_HEIGHT;
+				}
 			}
 		}
 	}
@@ -155,6 +168,7 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 
 	m_registry->ecs.replace<MobState>(m_registry->player(), player_state);
 	m_registry->ecs.replace<Player>(m_registry->player(), player);
+	m_registry->ecs.replace<AttackState>(m_registry->player(), attack_state);
 	return vel;
 }
 

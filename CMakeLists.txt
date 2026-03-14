@@ -152,6 +152,8 @@ add_executable(${PROJECT_NAME}
 		src/utils/geometry.h
 		src/discord.cpp
 		src/discord.h
+		src/utils/entity_factory.cpp
+		src/utils/entity_factory.h
 )
 
 

@@ -47,7 +47,13 @@ void RenderSystem::reset() noexcept {
 
 void RenderSystem::step(const float /*delta*/) noexcept {
 
-	m_draw->drawTexture(m_test_room_texture, glm::vec2(0,0), glm::vec2(config::CAMERA_VIEW_WIDTH/2.f,config::CAMERA_VIEW_HEIGHT/2.f));
+	glm::vec2 image_scaling = {config::CAMERA_VIEW_WIDTH*0.5f * 2.0f, config::CAMERA_VIEW_HEIGHT*0.5f};
+	for (entt::entity e : m_registry->ecs.view<RoomTexture>()) {
+		RoomTexture room_text = m_registry->ecs.get<RoomTexture>(e);
+		m_draw->drawTexture(room_text.texture, room_text.pos, image_scaling);
+	}
+
+	//m_draw->drawTexture(m_test_room_texture, glm::vec2(0,0), glm::vec2(config::CAMERA_VIEW_WIDTH/2.f,config::CAMERA_VIEW_HEIGHT/2.f));
 
 	// Draw Player
 	glm::vec2 player_pos = m_registry->ecs.get<Position>(m_registry->player()).pos;        // Position of the texture
@@ -92,7 +98,7 @@ void RenderSystem::step(const float /*delta*/) noexcept {
 	m_draw->drawTexture(current_player_texture, texture_pos, glm::vec2(0.1277578125f, 0.1277578125f));
 	m_draw->drawRect(player_pos+glm::vec2(0,player_size.y), player_pos+player_size,player_pos, player_pos+glm::vec2(player_size.x,0),color);
 
-	/*
+
     // Draw Plattform
     {
         for (entt::entity platform_entity: m_registry->ecs.view<Platform>()) {
@@ -104,7 +110,7 @@ void RenderSystem::step(const float /*delta*/) noexcept {
             glm::vec2 pos3 = pos1 + glm::vec2{size.x, 0};
             glm::vec2 pos4 = pos3 + glm::vec2{0, size.y};
 
-        	float opacity = 1.f;
+        	//float opacity = 1.f;
         	color = glm::vec3{ 1.f, 0.f, 0.f };
         	if (!pl.touchable) {
         		color = {1.f,1.f,0.f};
@@ -112,10 +118,10 @@ void RenderSystem::step(const float /*delta*/) noexcept {
         		color = {0.1176f,0.349f,0.2706f};
         	}
 
-        	m_draw->fillRect(pos1, pos2, pos3, pos4, color, opacity);
+        	m_draw->drawRect(pos1, pos2, pos3, pos4, color);
 		}
 	}
-*/
+
 
 	// Draw Attack Hitboxes
 	{
@@ -140,8 +146,10 @@ void RenderSystem::step(const float /*delta*/) noexcept {
 		PolygonShape poly = m_registry->ecs.get<PolygonShape>(polygon_entity);
 		glm::vec2 pos = m_registry->ecs.get<Position>(polygon_entity).pos;
 
+		std::cout<<pos.x<<" "<<pos.y<<" "<<player_pos.x<<" "<<player_pos.y<<std::endl;
+
 		glm::vec3 col = {1,0,0};
-		if (rectanglePolygonCollision(Rect(player_pos, player_size), poly)) col = {0,1,0};
+		if (rectanglePolygonCollision(Rect(player_pos, player_size), poly, pos)) col = {0,1,0};
 
 		m_draw->fillPolygon(pos, glm::vec2{1,1}, poly, col);
 	}
