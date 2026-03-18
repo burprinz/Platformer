@@ -6,9 +6,6 @@ namespace assets {
 
 enum struct Sound {
 	music,
-	music_endboss,
-	level_complete,
-	light_switch_activated,
 	count
 };
 
@@ -37,9 +34,6 @@ enum struct Shader {
 };
 
 enum struct Texture {
-		mirror,
-		door,
-		player_animation,
 		test_room,
 		background_1,
 		background_2,

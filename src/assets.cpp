@@ -1,10 +1,7 @@
 #include "assets.h"
 
 static constexpr std::array<const char*, static_cast<size_t>(assets::Sound::count)> SOUND_FILES = {
-	"music.wav",
-	"music_endboss.wav",
-	"level_complete.wav",
-	"light_switch_activated.wav"
+	"music.wav"
 };
 
 template<> std::string assets::getAssetPath<assets::Sound>(const assets::Sound asset_id) noexcept {
@@ -41,9 +38,6 @@ template<> std::string assets::getAssetPath<assets::Shader>(const assets::Shader
 }
 
 static constexpr std::array<const char*, static_cast<size_t>(assets::Texture::count)> TEXTURE_FILES = {
-	"mirror.png",
-	"door.png",
-	"LightEffects/player_animation.png",
 	"rooms/TestRoom.png",
 	"backgrounds/test/1.png",
 	"backgrounds/test/2.png",
