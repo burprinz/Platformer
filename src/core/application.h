@@ -9,6 +9,7 @@
 
 #include "discord.h"
 #include "draw.h"
+#include "systems/animation.h"
 #include "systems/background.h"
 #include "systems/combat.h"
 #include "utils/entity_factory.h"
@@ -32,6 +33,8 @@ class Application {
 		WorldSystem m_world;
 		PhysicsSystem m_physics;
 		CombatSystem m_combat;
+
+		AnimationSystem m_animation;
 
 		RenderSystem m_render;
 		BackgroundSystem m_background;

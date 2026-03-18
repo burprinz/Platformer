@@ -69,6 +69,7 @@ std::optional<Application> Application::init(const CommandLineOptions& options) 
 	self.m_physics = PhysicsSystem::init(self.m_window, self.m_registry, self.m_audio_engine);
 	self.m_render = RenderSystem::init(self.m_window, self.m_registry, self.m_draw);
 	self.m_background = BackgroundSystem::init(self.m_window, self.m_registry, self.m_draw);
+	self.m_animation = AnimationSystem::init(self.m_window, self.m_registry);
 	self.m_camera = CameraSystem::init(self.m_registry);
 
 	return self;
@@ -79,6 +80,7 @@ void Application::deinit() noexcept {
 	m_physics.deinit();
 	m_render.deinit();
 	m_audio_engine->deinit();
+	m_animation.deinit();
 
 	m_draw->deinit();
 
@@ -131,6 +133,8 @@ void Application::run() noexcept {
 
 		m_camera.step(delta_time);
 
+		m_animation.step(delta_time);
+
 		m_draw->start();
 		m_background.step(delta_time);
 		m_render.step(delta_time);
@@ -159,7 +163,9 @@ void Application::reset() noexcept {
 	m_registry->ecs.emplace<MobState>(player_id);
 	m_registry->ecs.emplace<AttackState>(player_id);
 
-	m_entity_factory.createFromFile("test_room.json");
+	//m_entity_factory.createFromFile("test_room.json");
+
+	m_entity_factory.createFromFile("/assets/roomSchemes/test_room.json");
 
 	// reset systems
 	m_world.reset();

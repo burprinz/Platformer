@@ -58,14 +58,14 @@ void RenderSystem::step(const float /*delta*/) noexcept {
 	// Draw Player
 	glm::vec2 player_pos = m_registry->ecs.get<Position>(m_registry->player()).pos;        // Position of the texture
 	glm::vec2 player_size = m_registry->ecs.get<Dimension>(m_registry->player()).dim;
-	glm::vec2 player_vel = m_registry->ecs.get<Velocity>(m_registry->player()).vel;
+	//glm::vec2 player_vel = m_registry->ecs.get<Velocity>(m_registry->player()).vel;
 	MobState player_state = m_registry->ecs.get<MobState>(m_registry->player());
-	AttackState attack_state = m_registry->ecs.get<AttackState>(m_registry->player());
+	//AttackState attack_state = m_registry->ecs.get<AttackState>(m_registry->player());
 	glm::vec3 color = {0, 0, 0};
 	if (player_state.climbing) {
 		color = {0, 0, 0};
 	}
-
+/*
 	Texture current_player_texture = player_idle_texture;
 	if (attack_state.state == ATTACKING) {
 		switch (attack_state.attack_dir) {
@@ -94,6 +94,31 @@ void RenderSystem::step(const float /*delta*/) noexcept {
 			else if (player_vel.x > 0) current_player_texture = player_walking_right_texture;
 		}
 	}
+
+	// Draw Plattform
+		{
+			for (entt::entity platform_entity: m_registry->ecs.view<Platform>()) {
+				Platform pl = m_registry->ecs.get<Platform>(platform_entity);
+				glm::vec2 pos1 = m_registry->ecs.get<Position>(platform_entity).pos;
+				glm::vec2 size = m_registry->ecs.get<Dimension>(platform_entity).dim;
+
+				glm::vec2 pos2 = pos1 + glm::vec2{0, size.y};
+				glm::vec2 pos3 = pos1 + glm::vec2{size.x, 0};
+				glm::vec2 pos4 = pos3 + glm::vec2{0, size.y};
+
+				//float opacity = 1.f;
+				color = glm::vec3{ 1.f, 0.f, 0.f };
+				if (!pl.touchable) {
+					color = {1.f,1.f,0.f};
+				} else if (!pl.can_climb) {
+					color = {0.1176f,0.349f,0.2706f};
+				}
+
+				m_draw->drawRect(pos1, pos2, pos3, pos4, color);
+			}
+		}
+
+	*/
 	//m_draw->drawTexture(current_player_texture, player_pos, glm::vec2(player_size.x, player_size.y));
 	m_draw->drawRect(player_pos+glm::vec2(0,player_size.y), player_pos+player_size,player_pos, player_pos+glm::vec2(player_size.x,0),color);
 
@@ -115,28 +140,32 @@ void RenderSystem::step(const float /*delta*/) noexcept {
 		}
 	}
 
-    // Draw Plattform
-    {
-        for (entt::entity platform_entity: m_registry->ecs.view<Platform>()) {
-        	Platform pl = m_registry->ecs.get<Platform>(platform_entity);
-            glm::vec2 pos1 = m_registry->ecs.get<Position>(platform_entity).pos;
-            glm::vec2 size = m_registry->ecs.get<Dimension>(platform_entity).dim;
-
-            glm::vec2 pos2 = pos1 + glm::vec2{0, size.y};
-            glm::vec2 pos3 = pos1 + glm::vec2{size.x, 0};
-            glm::vec2 pos4 = pos3 + glm::vec2{0, size.y};
-
-        	//float opacity = 1.f;
-        	color = glm::vec3{ 1.f, 0.f, 0.f };
-        	if (!pl.touchable) {
-        		color = {1.f,1.f,0.f};
-        	} else if (!pl.can_climb) {
-        		color = {0.1176f,0.349f,0.2706f};
-        	}
-
-        	m_draw->drawRect(pos1, pos2, pos3, pos4, color);
+	// Draw Platform Textures
+	{
+		for (entt::entity platform_entity : m_registry->ecs.view<Platform>()) {
+			Texture text = m_registry->ecs.get<Texture>(platform_entity);
+			glm::vec2 pos = m_registry->ecs.get<Position>(platform_entity).pos;
+			glm::vec2 size = m_registry->ecs.get<Dimension>(platform_entity).dim * 0.5f;
+			m_draw->drawTexture(text, pos, size);
 		}
 	}
+
+	// Draw Hitboxes
+	{
+		if (m_registry->debug) {
+			for (entt::entity hitbox_entity : m_registry->ecs.view<Hitbox>()) {
+				glm::vec2 pos1 = m_registry->ecs.get<Position>(hitbox_entity).pos;
+				glm::vec2 size = m_registry->ecs.get<Dimension>(hitbox_entity).dim;
+				glm::vec2 pos2 = pos1 + glm::vec2{0, size.y};
+				glm::vec2 pos3 = pos1 + glm::vec2{size.x, 0};
+				glm::vec2 pos4 = pos3 + glm::vec2{0, size.y};
+
+				m_draw->drawRect(pos1, pos2, pos3, pos4, {1,0,0});
+			}
+		}
+	}
+
+
 
 
 	for (entt::entity polygon_entity : m_registry->ecs.view<PolygonShape>()) {

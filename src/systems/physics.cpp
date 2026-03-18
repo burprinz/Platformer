@@ -68,15 +68,9 @@ glm::vec2 transformVertexWorld(
 glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 
 	entt::entity pl = m_registry->player();
+	Player player = m_registry->ecs.get<Player>(pl);
 
-	float speed = 0.f;
-	if (m_registry->keys["shift"]) {
-		speed = m_registry->ecs.get<Player>(pl).sprint_velocity;
-	} else if (m_registry->keys["strg"]) {
-		speed = m_registry->ecs.get<Player>(pl).sneak_velocity;
-	} else {
-		speed = m_registry->ecs.get<Player>(pl).velocity;
-	}
+	float speed = player.velocity;
 
 	// Update player velocity
 	glm::vec2 vel = m_registry->ecs.get<Velocity>(pl).vel;
@@ -84,10 +78,10 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 
 	// Key input (A,D)
 	if (m_registry->keys["d"]) {
-		vel.x += delta*14;
+		vel.x += delta*player.acceleration;
 		if (vel.x > speed) vel.x = speed;
 	} else if (m_registry->keys["a"]) {
-		vel.x -= delta*14;
+		vel.x -= delta*player.acceleration;
 		if (vel.x < -speed) vel.x = -speed;
 	} else {
 		vel.x = 0;
@@ -95,11 +89,13 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 
 	MobState player_state = m_registry->ecs.get<MobState>(m_registry->player());
 	AttackState attack_state = m_registry->ecs.get<AttackState>(m_registry->player());
-	Player player = m_registry->ecs.get<Player>(m_registry->player());
+
+	//std::cout<<player_state.on_ground<<" "<<player_state.on_ceiling<<" "<<player_state.on_left_wall<<" "<<player_state.on_right_wall<<" "<<player_state.falling<<" "<<player_state.climbing<<" "<<player_state.in_air<<std::endl;
+
 
 	// Player is on "spike"-platform
 	for (entt::entity e : m_registry->hit_entities) {
-		if (!m_registry->ecs.get<Platform>(e).touchable) {
+		if (!m_registry->ecs.get<Hitbox>(e).touchable) {
 			vel = {0, 0};
 			m_registry->ecs.replace<Position>(pl, player.lastSafePosition);
 			m_registry->hit_entities.clear();
@@ -107,6 +103,7 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 		}
 	}
 	m_registry->hit_entities.clear();
+
 
 	// Update last safe position if current pos is safe
 	if (player_state.on_ground) {
@@ -118,10 +115,10 @@ glm::vec2 PhysicsSystem::calculatePlayerVelocity(float delta) noexcept {
 		Rect attack_hitbox = attack_state.attack_box;
 		attack_hitbox.pos += pos;
 		bool pogod = false;
-		for (entt::entity platform_id : m_registry->ecs.view<Platform>()) {
-			Platform platform = m_registry->ecs.get<Platform>(platform_id);
-			Rect platform_hitbox = Rect(m_registry->ecs.get<Position>(platform_id).pos, m_registry->ecs.get<Dimension>(platform_id).dim);
-			if (platform.can_pogo && isFullyAboveRect(pos, platform_hitbox) && rectCollision(attack_hitbox, platform_hitbox)) {
+		for (entt::entity hitbox_id : m_registry->ecs.view<Platform>()) {
+			Hitbox hb = m_registry->ecs.get<Hitbox>(hitbox_id);
+			Rect hitbox = Rect(m_registry->ecs.get<Position>(hitbox_id).pos, m_registry->ecs.get<Dimension>(hitbox_id).dim);
+			if (hb.can_pogo && isFullyAboveRect(pos, hitbox) && rectCollision(attack_hitbox, hitbox)) {
 				player_state.can_double_jump = true;
 				vel.y = JUMP_HEIGHT;
 				pogod = true;
@@ -188,7 +185,7 @@ void PhysicsSystem::handleCollision(float delta, entt::entity entity_id, glm::ve
 
 	entt::entity side_touch_entity = entt::null;
 
-	for (entt::entity platform_id : m_registry->ecs.view<Platform>()) {
+	for (entt::entity platform_id : m_registry->ecs.view<Hitbox>()) {
 		glm::vec2 platform_pos = m_registry->ecs.get<Position>(platform_id).pos;
 		glm::vec2 platform_size = m_registry->ecs.get<Dimension>(platform_id).dim;
 
@@ -196,7 +193,7 @@ void PhysicsSystem::handleCollision(float delta, entt::entity entity_id, glm::ve
 			next_pos.x + size.x >= platform_pos.x &&
 			next_pos.y <= platform_pos.y + platform_size.y &&
 			next_pos.y + size.y >= platform_pos.y) {
-			m_registry->hit_entities.push_back(platform_id);
+			//m_registry->hit_entities.push_back(platform_id);
 
 			float top_dist = pos.y - (platform_pos.y + platform_size.y);
 			float bot_dist = platform_pos.y - (pos.y + size.y);
@@ -246,10 +243,9 @@ void PhysicsSystem::handleCollision(float delta, entt::entity entity_id, glm::ve
 	state.climbing = state.falling && (on_left || on_right);
 	if (state.on_ground || state.climbing) state.can_double_jump = true;
 
-
 	if (side_touch_entity != entt::null) {
-		Platform pl = m_registry->ecs.get<Platform>(side_touch_entity);
-		state.climbing = state.climbing && pl.can_climb;
+		Hitbox hb = m_registry->ecs.get<Hitbox>(side_touch_entity);
+		state.climbing = state.climbing && hb.can_climb;
 	}
 
 	m_registry->ecs.replace<Position>(entity_id, next_pos);

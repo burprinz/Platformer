@@ -1,0 +1,153 @@
+{
+  "id": 1,
+  "meta": {
+    "image_size": {
+      "x": 1920,
+      "y": 1080
+    },
+    "images": [
+      {
+        "path": "rooms/TestRoom.png"
+      }
+    ]
+  },
+  "player": {
+    "position": {
+      "x": 0.8,
+      "y": 0.2
+    }
+  },
+  "objects": [
+    {
+      "id": 1,
+      "type": "Platform",
+      "position": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "size": {
+        "w": 60.0,
+        "h": 1080.0
+      },
+      "can_climb": true,
+      "touchable": true,
+      "can_pogo": false
+    },
+    {
+      "id": 1,
+      "type": "Platform",
+      "position": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "size": {
+        "w": 1920.0,
+        "h": 60.0
+      },
+      "can_climb": false,
+      "touchable": true,
+      "can_pogo": false
+    },
+    {
+      "id": 1,
+      "type": "Platform",
+      "position": {
+        "x": 60.0,
+        "y": 105.0
+      },
+      "size": {
+        "w": 150.0,
+        "h": 60.0
+      },
+      "can_climb": false,
+      "touchable": true,
+      "can_pogo": false
+    },
+    {
+      "id": 1,
+      "type": "Platform",
+      "position": {
+        "x": 375.0,
+        "y": 210.0
+      },
+      "size": {
+        "w": 225.0,
+        "h": 60.0
+      },
+      "can_climb": false,
+      "touchable": true,
+      "can_pogo": false
+    },
+    {
+      "id": 1,
+      "type": "Platform",
+      "position": {
+        "x": 375.0,
+        "y": 735.0
+      },
+      "size": {
+        "w": 165.0,
+        "h": 45.0
+      },
+      "can_climb": false,
+      "touchable": true,
+      "can_pogo": false
+    },
+    {
+      "id": 1,
+      "type": "Platform",
+      "position": {
+        "x": 750.0,
+        "y": 435.0
+      },
+      "size": {
+        "w": 225.0,
+        "h": 45.0
+      },
+      "can_climb": false,
+      "touchable": false,
+      "can_pogo": true
+    },
+    {
+      "id": 1,
+      "type": "Polygon",
+      "position": {
+        "x": 1262.0,
+        "y": 60.0
+      },
+      "vertices": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 1065,
+          "y": 0
+        },
+        {
+          "x": 1065,
+          "y": 315
+        },
+        {
+          "x": 880,
+          "y": 315
+        },
+        {
+          "x": 316,
+          "y": 182
+        },
+        {
+          "x": 145,
+          "y": 182
+        },
+        {
+          "x": 0,
+          "y": 113
+        }
+      ]
+    }
+  ],
+  "enemies": [
+
+  ]
+}

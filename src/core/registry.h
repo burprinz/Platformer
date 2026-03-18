@@ -22,9 +22,7 @@ struct Viewport{
 
 struct Player {
     float velocity = 2.5f;
-    float sprint_velocity = 1.f;
-    float sneak_velocity = .2f;
-
+    float acceleration = 14.0f;
     glm::vec2 lastSafePosition;
 };
 
@@ -48,6 +46,11 @@ struct Scale {
     glm::vec2 scale;
 };
 
+struct Hitbox {
+    bool can_climb = false;
+    bool touchable = true;
+    bool can_pogo = false;
+};
 
 
 
@@ -86,9 +89,7 @@ struct PolygonShape {
 };
 
 struct Platform {
-    bool can_climb = false;
-    bool touchable = true;
-    bool can_pogo = false;
+
 };
 
 struct Spike {
@@ -181,6 +182,8 @@ public:
 
     glm::vec2 camera_origin;
     glm::vec2 camera_pos = {0,0};
+
+    bool debug = false;
 
 private:
 
