@@ -156,6 +156,8 @@ add_executable(${PROJECT_NAME}
 		src/utils/entity_factory.h
 		src/systems/animation.cpp
 		src/systems/animation.h
+		src/fsm/state.cpp
+		src/fsm/state.h
 )
 
 
