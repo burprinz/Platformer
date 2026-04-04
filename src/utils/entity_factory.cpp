@@ -61,6 +61,9 @@ void EntityFactory::createFromFile(const std::string &path) noexcept {
         std::cout<< "Level <"<<path<<"> not found"<<std::endl;
     }
 
+    std::string background_name = m_levelJson["background"].get<std::string>();
+    createBackground(background_name);
+
     float screen_width = config::CAMERA_VIEW_WIDTH;
     int file_scale_width = m_levelJson["scale"]["x"].get<float>();
     float scaling_factor = screen_width / file_scale_width;
@@ -177,6 +180,23 @@ void EntityFactory::createPlatform(int id, std::string texture, glm::vec2 pos) n
 
     Texture platform_text = Texture::init((getBasePath() + base_path + ".png").c_str());
     m_registry->ecs.emplace<Texture>(platform_entity, platform_text);
+}
+
+void EntityFactory::createBackground(std::string name) noexcept {
+    std::string json_path = "/assets/textures/backgrounds/" + name + "/background_info.json";
+    bool path_loaded = readPath(json_path, &m_objectJson);
+    if (!path_loaded) {
+        std::cout<< "Background <"<<json_path<<"> not found"<<std::endl;
+    }
+
+    for (auto& background_part : m_objectJson["images"]) {
+        std::string image_path = getTexturePath("backgrounds/" + name + "/" + background_part["img_name"].get<std::string>());
+        float speed = background_part["speed"];
+        BackgroundImage img;
+        img.text = Texture::init(image_path);
+        img.speed = speed;
+        m_registry->m_background_textures.push_back(img);
+    }
 }
 
 /*

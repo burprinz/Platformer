@@ -25,8 +25,5 @@ private:
     Registry* m_registry;
     Window* m_window;
     Draw* m_draw;
-
-    std::vector<Texture> m_background_textures;
-
 };
 

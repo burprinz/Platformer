@@ -7,6 +7,7 @@ class Texture {
 	public:
 		static Texture init(const GLsizei width, const GLsizei height) noexcept;
 		static Texture init(const assets::Texture asset) noexcept;
+        static Texture init(const std::string asset_path);
 		static Texture init(const char* path) noexcept;
 		void deinit() noexcept;
 		void bind(const GLuint sampler) const noexcept;

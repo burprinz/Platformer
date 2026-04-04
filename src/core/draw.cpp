@@ -28,7 +28,7 @@ Draw *Draw::init(Window* window, Registry* registry) noexcept {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_STATIC_DRAW);
 
      // load resources for rendering
-    self->m_player_mesh = Mesh::init(assets::Mesh::player).value();
+    //self->m_player_mesh = Mesh::init(assets::Mesh::player).value();
 
     self->m_player_shader = Shader::init(assets::Shader::player).value();
     self->m_line_shader = Shader::init(assets::Shader::line).value();
@@ -138,7 +138,7 @@ Draw *Draw::init(Window* window, Registry* registry) noexcept {
 }
 
 void Draw::deinit() noexcept {
-    m_player_mesh.deinit();
+    //m_player_mesh.deinit();
     m_player_shader.deinit();
     m_line_shader.deinit();
     m_polygon_shader.deinit();

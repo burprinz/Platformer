@@ -8,9 +8,6 @@ AudioSystem AudioSystem::init() noexcept {
 	self.m_engine = new ma_engine;
 	ma_engine_init(nullptr, self.m_engine);
 	self.m_background_music = self.loadSound(assets::Sound::music);
-	self.m_level_complete_sound = self.loadSound(assets::Sound::level_complete);
-	self.m_light_switch_activated_sound = self.loadSound(assets::Sound::light_switch_activated);
-
 	ma_sound_set_volume(self.m_background_music, MUSIC_VOLUME);
 
 	return self;
@@ -19,12 +16,6 @@ AudioSystem AudioSystem::init() noexcept {
 void AudioSystem::deinit() noexcept {
 	ma_sound_uninit(m_background_music);
 	delete m_background_music;
-	
-	ma_sound_uninit(m_level_complete_sound);
-	delete m_level_complete_sound;
-
-	ma_sound_uninit(m_light_switch_activated_sound);
-	delete m_light_switch_activated_sound;
 
 	ma_engine_uninit(m_engine);
 	delete m_engine;

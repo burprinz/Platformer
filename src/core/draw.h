@@ -92,7 +92,6 @@ private:
 
     Framebuffer m_intermediate_framebuffer;
 
-    Mesh m_player_mesh;
     Shader m_player_shader;
     Shader m_line_shader;
     Shader m_platform_shader;

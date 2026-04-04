@@ -39,15 +39,6 @@ template<> std::string assets::getAssetPath<assets::Shader>(const assets::Shader
 
 static constexpr std::array<const char*, static_cast<size_t>(assets::Texture::count)> TEXTURE_FILES = {
 	"rooms/TestRoom.png",
-	"backgrounds/test/1.png",
-	"backgrounds/test/2.png",
-	"backgrounds/test/3fx.png",
-	"backgrounds/test/4.png",
-	"backgrounds/test/5.png",
-	"backgrounds/test/6fx.png",
-	"backgrounds/test/7.png",
-	"backgrounds/test/8fx.png",
-	"backgrounds/test/9.png",
 	"character/player_test/idle.png",
 "character/player_test/walking_left.png",
 "character/player_test/walking_right.png",

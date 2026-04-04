@@ -52,6 +52,11 @@ struct Hitbox {
     bool can_pogo = false;
 };
 
+struct BackgroundImage {
+    Texture text;
+    float speed;
+};
+
 
 
 /**
@@ -179,6 +184,8 @@ public:
     std::map<std::string, bool> keys;
 
     std::vector<entt::entity> hit_entities;
+
+    std::vector<BackgroundImage> m_background_textures;
 
     glm::vec2 camera_origin;
     glm::vec2 camera_pos = {0,0};

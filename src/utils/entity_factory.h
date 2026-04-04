@@ -16,6 +16,7 @@ public:
     bool readPath(const std::string& path, nlohmann::json* json) noexcept;
     void createFromFile(const std::string& path) noexcept;
     void createPlatform(int id, std::string texture, glm::vec2 pos) noexcept;
+    void createBackground(std::string name) noexcept;
 
 private:
     Registry* m_registry;
@@ -23,6 +24,10 @@ private:
 
     nlohmann::json m_levelJson;
     nlohmann::json m_objectJson;
+
+    inline std::string getTexturePath(std::string relative_path) noexcept {
+        return getBasePath() + "/assets/textures/" + relative_path;
+    }
 
     std::string m_texture_base_path = getBasePath() + "/assets/textures/";
 };
